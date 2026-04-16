@@ -140,7 +140,7 @@ namespace MinesweeperGUI
             buttons = new Button[gridSize, gridSize];
             int buttonSize = 40;
 
-            panelBoard.Controls.Clear();
+            PanelBoard.Controls.Clear();
 
             for (int row = 0; row < gridSize; row++)
             {
@@ -158,13 +158,13 @@ namespace MinesweeperGUI
                     btn.BackgroundImage = hiddenTileImage;
                     btn.Text = "";
 
-                    panelBoard.Controls.Add(btn);
+                    PanelBoard.Controls.Add(btn);
                     buttons[row, col] = btn;
                 }
             }
 
-            panelBoard.Width = gridSize * buttonSize;
-            panelBoard.Height = gridSize * buttonSize;
+            PanelBoard.Width = gridSize * buttonSize;
+            PanelBoard.Height = gridSize * buttonSize;
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace MinesweeperGUI
         private void ButtonMouseUp(object? sender, MouseEventArgs e)
         {
             Button btn = (Button)sender!;
-            Point point = (Point)btn.Tag;
+            Point point = (Point)btn.Tag!;
 
             int row = point.X;
             int col = point.Y;
@@ -200,6 +200,11 @@ namespace MinesweeperGUI
         /// </summary>
         private void UpdateBoardUI()
         {
+            if (buttons == null)
+            {
+                return;
+            }
+
             for (int row = 0; row < gridSize; row++)
             {
                 for (int col = 0; col < gridSize; col++)
@@ -274,6 +279,11 @@ namespace MinesweeperGUI
         /// </summary>
         private void RevealBombs()
         {
+            if (buttons == null)
+            {
+                return;
+            }
+
             for (int row = 0; row < gridSize; row++)
             {
                 for (int col = 0; col < gridSize; col++)
@@ -293,6 +303,11 @@ namespace MinesweeperGUI
         /// </summary>
         private void DisableBoard()
         {
+            if (buttons == null)
+            {
+                return;
+            }
+
             for (int row = 0; row < gridSize; row++)
             {
                 for (int col = 0; col < gridSize; col++)

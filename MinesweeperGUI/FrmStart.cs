@@ -31,8 +31,8 @@ namespace MinesweeperGUI
         /// <param name="e">The event data.</param>
         private void BtnStartGameClick(object sender, EventArgs e)
         {
-            int size = int.TryParse(txtSize.Text, out int result) ? result : 5;
-            string difficulty = cmbDifficulty.SelectedItem?.ToString() ?? "Easy";
+            int size = int.TryParse(TxtSize.Text, out int result) ? result : 5;
+            string difficulty = CmbDifficulty.SelectedItem?.ToString() ?? "Easy";
 
             int difficultyLevel = 1;
 
@@ -61,7 +61,7 @@ namespace MinesweeperGUI
         /// <param name="e">The event data.</param>
         private void FrmStartLoad(object sender, EventArgs e)
         {
-            cmbDifficulty.SelectedIndex = 0;
+            CmbDifficulty.SelectedIndex = 0;
         }
     }
 }
