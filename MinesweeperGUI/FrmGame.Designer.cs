@@ -1,4 +1,11 @@
-﻿namespace MinesweeperGUI
+﻿/*Darius Drake William Castellanos
+ * CST-250
+ * Milestone 5
+ * Updated by Will Castellanos
+ * 2/17/26
+ */
+
+namespace MinesweeperGUI
 {
     partial class FrmGame
     {
@@ -8,9 +15,9 @@
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Clean up any resources being used.
+        /// Cleans up any resources being used.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">True if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -28,23 +35,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panelBoard = new Panel();
+            PanelBoard = new Panel();
             SuspendLayout();
             // 
-            // panelBoard
+            // PanelBoard
             // 
-            panelBoard.Location = new Point(896, 327);
-            panelBoard.Margin = new Padding(4, 5, 4, 5);
-            panelBoard.Name = "panelBoard";
-            panelBoard.Size = new Size(806, 765);
-            panelBoard.TabIndex = 0;
+            PanelBoard.Location = new Point(896, 327);
+            PanelBoard.Margin = new Padding(4, 5, 4, 5);
+            PanelBoard.Name = "PanelBoard";
+            PanelBoard.Size = new Size(806, 765);
+            PanelBoard.TabIndex = 0;
             // 
             // FrmGame
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1924, 1050);
-            Controls.Add(panelBoard);
+            Controls.Add(PanelBoard);
             Margin = new Padding(4, 5, 4, 5);
             Name = "FrmGame";
             Text = "Minesweeper";
@@ -53,6 +60,6 @@
 
         #endregion
 
-        private Panel panelBoard;
+        private Panel PanelBoard;
     }
 }

@@ -1,4 +1,11 @@
-﻿namespace MinesweeperGUI
+﻿/*Darius Drake William Castellanos
+ * CST-250
+ * Milestone 5
+ * Updated by Will Castellanos
+ * 2/17/26
+ */
+
+namespace MinesweeperGUI
 {
     partial class FrmStats
     {
@@ -8,23 +15,23 @@
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Clean up any resources being used.
+        /// Cleans up any resources being used.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">True if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
 
         /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// Required method for Designer support.
         /// </summary>
         private void InitializeComponent()
         {
@@ -51,7 +58,7 @@
             MenuStats.Name = "MenuStats";
             MenuStats.Size = new Size(1025, 33);
             MenuStats.TabIndex = 0;
-            MenuStats.Text = "menuStrip1";
+            MenuStats.Text = "MenuStats";
             // 
             // MnuFile
             // 
@@ -65,21 +72,21 @@
             MnuSave.Name = "MnuSave";
             MnuSave.Size = new Size(153, 34);
             MnuSave.Text = "Save";
-            MnuSave.Click += MnuSaveClickEH;
+            MnuSave.Click += MnuSaveClick;
             // 
             // MnuLoad
             // 
             MnuLoad.Name = "MnuLoad";
             MnuLoad.Size = new Size(153, 34);
             MnuLoad.Text = "Load";
-            MnuLoad.Click += MnuLoadClickEH;
+            MnuLoad.Click += MnuLoadClick;
             // 
             // MnuExit
             // 
             MnuExit.Name = "MnuExit";
             MnuExit.Size = new Size(153, 34);
             MnuExit.Text = "Exit";
-            MnuExit.Click += MnuExitClickEH;
+            MnuExit.Click += MnuExitClick;
             // 
             // MnuSort
             // 
@@ -93,21 +100,21 @@
             MnuSortByName.Name = "MnuSortByName";
             MnuSortByName.Size = new Size(185, 34);
             MnuSortByName.Text = "By Name";
-            MnuSortByName.Click += MnuSortByNameClickEH;
+            MnuSortByName.Click += MnuSortByNameClick;
             // 
             // MnuSortByScore
             // 
             MnuSortByScore.Name = "MnuSortByScore";
             MnuSortByScore.Size = new Size(185, 34);
             MnuSortByScore.Text = "By Score";
-            MnuSortByScore.Click += MnuSortByScoreClickEH;
+            MnuSortByScore.Click += MnuSortByScoreClick;
             // 
             // MnuSortByDate
             // 
             MnuSortByDate.Name = "MnuSortByDate";
             MnuSortByDate.Size = new Size(185, 34);
             MnuSortByDate.Text = "By Date";
-            MnuSortByDate.Click += MnuSortByDateClickEH;
+            MnuSortByDate.Click += MnuSortByDateClick;
             // 
             // DgvStats
             // 
@@ -126,7 +133,7 @@
             BtnClose.TabIndex = 2;
             BtnClose.Text = "Close";
             BtnClose.UseVisualStyleBackColor = true;
-            BtnClose.Click += BtnCloseClickEH;
+            BtnClose.Click += BtnCloseClick;
             // 
             // FrmStats
             // 

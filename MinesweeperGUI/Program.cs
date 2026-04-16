@@ -1,22 +1,23 @@
-/*Darius Drake
+/*Darius Drake William Castellanos
  * CST-250
- * Milestone 4
- * Darius Drake
- * 3/31/26
+ * Milestone 5
+ * Updated by Will Castellanos
+ * 2/17/26
  */
 
 namespace MinesweeperGUI
 {
+    /// <summary>
+    /// Provides the main entry point for the Minesweeper GUI application.
+    /// </summary>
     internal static class Program
     {
         /// <summary>
-        ///  The main entry point for the application.
+        /// Starts the Minesweeper GUI application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             Application.Run(new FrmStart());
         }
