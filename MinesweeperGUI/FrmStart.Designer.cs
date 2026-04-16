@@ -1,8 +1,8 @@
-﻿/*
- * William Castellanos
+﻿/*Darius Drake William Castellanos
  * CST-250
- * Milestone 4
- * 4/1/2026
+ * Milestone 5
+ * Updated by Will Castellanos
+ * 2/17/26
  */
 
 namespace MinesweeperGUI
@@ -15,15 +15,16 @@ namespace MinesweeperGUI
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Clean up any resources being used.
+        /// Cleans up any resources being used.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">True if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -34,86 +35,87 @@ namespace MinesweeperGUI
         /// </summary>
         private void InitializeComponent()
         {
-            lblBoardSize = new Label();
-            txtSize = new TextBox();
-            btnStart = new Button();
-            cmbDifficulty = new ComboBox();
-            label1 = new Label();
+            LblBoardSize = new Label();
+            TxtSize = new TextBox();
+            BtnStart = new Button();
+            CmbDifficulty = new ComboBox();
+            LblDifficulty = new Label();
             SuspendLayout();
             // 
-            // lblBoardSize
+            // LblBoardSize
             // 
-            lblBoardSize.AutoSize = true;
-            lblBoardSize.Location = new Point(954, 232);
-            lblBoardSize.Margin = new Padding(5, 0, 5, 0);
-            lblBoardSize.Name = "lblBoardSize";
-            lblBoardSize.Size = new Size(95, 25);
-            lblBoardSize.TabIndex = 0;
-            lblBoardSize.Text = "Board Size";
+            LblBoardSize.AutoSize = true;
+            LblBoardSize.Location = new Point(954, 232);
+            LblBoardSize.Margin = new Padding(5, 0, 5, 0);
+            LblBoardSize.Name = "LblBoardSize";
+            LblBoardSize.Size = new Size(95, 25);
+            LblBoardSize.TabIndex = 0;
+            LblBoardSize.Text = "Board Size";
             // 
-            // txtSize
+            // TxtSize
             // 
-            txtSize.Location = new Point(931, 308);
-            txtSize.Margin = new Padding(5, 5, 5, 5);
-            txtSize.Name = "txtSize";
-            txtSize.Size = new Size(141, 31);
-            txtSize.TabIndex = 1;
+            TxtSize.Location = new Point(931, 308);
+            TxtSize.Margin = new Padding(5, 5, 5, 5);
+            TxtSize.Name = "TxtSize";
+            TxtSize.Size = new Size(141, 31);
+            TxtSize.TabIndex = 1;
             // 
-            // btnStart
+            // BtnStart
             // 
-            btnStart.Location = new Point(942, 382);
-            btnStart.Margin = new Padding(5, 5, 5, 5);
-            btnStart.Name = "btnStart";
-            btnStart.Size = new Size(107, 38);
-            btnStart.TabIndex = 2;
-            btnStart.Text = "Start Game";
-            btnStart.UseVisualStyleBackColor = true;
-            btnStart.Click += btnStartGame_ClickEH;
+            BtnStart.Location = new Point(942, 382);
+            BtnStart.Margin = new Padding(5, 5, 5, 5);
+            BtnStart.Name = "BtnStart";
+            BtnStart.Size = new Size(107, 38);
+            BtnStart.TabIndex = 2;
+            BtnStart.Text = "Start Game";
+            BtnStart.UseVisualStyleBackColor = true;
+            BtnStart.Click += BtnStartGameClick;
             // 
-            // cmbDifficulty
+            // CmbDifficulty
             // 
-            cmbDifficulty.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbDifficulty.FormattingEnabled = true;
-            cmbDifficulty.Items.AddRange(new object[] { "Easy", "Medium", "Hard" });
-            cmbDifficulty.Location = new Point(422, 329);
-            cmbDifficulty.Margin = new Padding(2, 2, 2, 2);
-            cmbDifficulty.Name = "cmbDifficulty";
-            cmbDifficulty.Size = new Size(187, 33);
-            cmbDifficulty.TabIndex = 3;
+            CmbDifficulty.DropDownStyle = ComboBoxStyle.DropDownList;
+            CmbDifficulty.FormattingEnabled = true;
+            CmbDifficulty.Items.AddRange(new object[] { "Easy", "Medium", "Hard" });
+            CmbDifficulty.Location = new Point(422, 329);
+            CmbDifficulty.Margin = new Padding(2, 2, 2, 2);
+            CmbDifficulty.Name = "CmbDifficulty";
+            CmbDifficulty.Size = new Size(187, 33);
+            CmbDifficulty.TabIndex = 3;
             // 
-            // label1
+            // LblDifficulty
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(422, 214);
-            label1.Margin = new Padding(2, 0, 2, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(82, 25);
-            label1.TabIndex = 4;
-            label1.Text = "Difficulty";
+            LblDifficulty.AutoSize = true;
+            LblDifficulty.Location = new Point(422, 214);
+            LblDifficulty.Margin = new Padding(2, 0, 2, 0);
+            LblDifficulty.Name = "LblDifficulty";
+            LblDifficulty.Size = new Size(82, 25);
+            LblDifficulty.TabIndex = 4;
+            LblDifficulty.Text = "Difficulty";
             // 
             // FrmStart
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1480, 820);
-            Controls.Add(label1);
-            Controls.Add(cmbDifficulty);
-            Controls.Add(btnStart);
-            Controls.Add(txtSize);
-            Controls.Add(lblBoardSize);
+            Controls.Add(LblDifficulty);
+            Controls.Add(CmbDifficulty);
+            Controls.Add(BtnStart);
+            Controls.Add(TxtSize);
+            Controls.Add(LblBoardSize);
             Margin = new Padding(5, 5, 5, 5);
             Name = "FrmStart";
             Text = "Start Game";
+            Load += FrmStartLoad;
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private Label lblBoardSize;
-        private TextBox txtSize;
-        private Button btnStart;
-        private ComboBox cmbDifficulty;
-        private Label label1;
+        private Label LblBoardSize;
+        private TextBox TxtSize;
+        private Button BtnStart;
+        private ComboBox CmbDifficulty;
+        private Label LblDifficulty;
     }
 }

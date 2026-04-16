@@ -1,30 +1,37 @@
-﻿namespace MinesweeperGUI
+﻿/*Darius Drake William Castellanos
+ * CST-250
+ * Milestone 5
+ * Updated by Will Castellanos
+ * 2/17/26
+ */
+
+namespace MinesweeperGUI
 {
     partial class FrmWinner
     {
         /// <summary>
-        ///  Required designer variable.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        ///  Clean up any resources being used.
+        /// Cleans up any resources being used.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">True if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
 
         /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
+        /// Required method for Designer support.
         /// </summary>
         private void InitializeComponent()
         {
@@ -71,7 +78,7 @@
             BtnSubmit.TabIndex = 3;
             BtnSubmit.Text = "OK";
             BtnSubmit.UseVisualStyleBackColor = true;
-            BtnSubmit.Click += BtnSubmitClickEH;
+            BtnSubmit.Click += BtnSubmitClick;
             // 
             // FrmWinner
             // 
@@ -95,6 +102,5 @@
         private Label LblScore;
         private TextBox TxtName;
         private Button BtnSubmit;
-        private TextBox textBox1;
     }
 }

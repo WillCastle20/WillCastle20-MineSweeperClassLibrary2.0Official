@@ -1,49 +1,99 @@
-﻿/*Darius Drake
+﻿/*Darius Drake William Castellanos
  * CST-250
- * Milestone 4
- * Darius Drake
- * 3/31/26
+ * Milestone 5
+ * Updated by Will Castellanos
+ * 2/17/26
  */
-
 
 using System;
 using System.Drawing;
-using System.Windows.Forms;
-using MinesweeperClassLibrary.Models;
-using MinesweeperClassLibrary.BusinessLogicLayer;
 using System.IO;
+using System.Windows.Forms;
+using MinesweeperClassLibrary.BusinessLogicLayer;
+using MinesweeperClassLibrary.Models;
 using Timer = System.Windows.Forms.Timer;
-
 
 namespace MinesweeperGUI
 {
+    /// <summary>
+    /// Represents the main game form where the player interacts with the Minesweeper board.
+    /// </summary>
     public partial class FrmGame : Form
     {
-        int size;
-        int difficultyLevel;
-        private int gridSize;
-        private Button[,]? buttons;
-
-        private BoardModel board;
-        private BoardLogic logic;
-
-        private Image hiddenTileImage;
-        private Image revealedTileImage;
-        private Image bombImage;
-        private Image flagImage;
-        private Image[] numberImages;
-        private DateTime startTime;
-        private Timer gameTimer = new Timer();
-       
+        /// <summary>
+        /// Stores the selected board size.
+        /// </summary>
+        private int size;
 
         /// <summary>
-        /// Wires the difficulty level
+        /// Stores the selected difficulty level.
         /// </summary>
-        /// <param name="size"></param>
-        /// <param name="difficultyLevel"></param>
+        private int difficultyLevel;
+
+        /// <summary>
+        /// Stores the current grid size.
+        /// </summary>
+        private int gridSize;
+
+        /// <summary>
+        /// Stores the button grid used to display the game board.
+        /// </summary>
+        private Button[,]? buttons;
+
+        /// <summary>
+        /// Stores the board model for the current game.
+        /// </summary>
+        private BoardModel board;
+
+        /// <summary>
+        /// Stores the business logic object for the game.
+        /// </summary>
+        private BoardLogic logic;
+
+        /// <summary>
+        /// Stores the image used for hidden tiles.
+        /// </summary>
+        private Image hiddenTileImage;
+
+        /// <summary>
+        /// Stores the image used for revealed empty tiles.
+        /// </summary>
+        private Image revealedTileImage;
+
+        /// <summary>
+        /// Stores the image used for bomb tiles.
+        /// </summary>
+        private Image bombImage;
+
+        /// <summary>
+        /// Stores the image used for flagged tiles.
+        /// </summary>
+        private Image flagImage;
+
+        /// <summary>
+        /// Stores the images used for numbered tiles.
+        /// </summary>
+        private Image[] numberImages;
+
+        /// <summary>
+        /// Stores the time when the game started.
+        /// </summary>
+        private DateTime startTime;
+
+        /// <summary>
+        /// Stores the game timer.
+        /// </summary>
+        private Timer gameTimer = new Timer();
+
+        /// <summary>
+        /// Initializes a new instance of the FrmGame form using the selected size and difficulty.
+        /// </summary>
+        /// <param name="size">The selected board size.</param>
+        /// <param name="difficultyLevel">The selected difficulty level.</param>
         public FrmGame(int size, int difficultyLevel)
         {
             InitializeComponent();
+
             gameTimer = new Timer();
             gameTimer.Interval = 1000;
 
@@ -52,7 +102,6 @@ namespace MinesweeperGUI
 
             this.size = size;
             this.difficultyLevel = difficultyLevel;
-
             gridSize = size;
 
             board = new BoardModel(gridSize);
@@ -71,26 +120,24 @@ namespace MinesweeperGUI
                 numberImages[i] = Image.FromFile(Path.Combine(imagePath, $"{i}.png"));
             }
 
-            //THIS is where difficulty will matter
             logic.SetUpBombs(board, difficultyLevel);
             logic.CountBombsNearby(board);
 
             CreateGrid();
             UpdateBoardUI();
-            startTime = DateTime.Now;
 
-            gameTimer.Interval = 1000; // 1 second
-            gameTimer.Tick += GameTimer_Tick;
+            startTime = DateTime.Now;
+            gameTimer.Interval = 1000;
+            gameTimer.Tick += GameTimerTick;
             gameTimer.Start();
         }
 
         /// <summary>
-        /// Creates the grid of buttons
+        /// Creates the grid of buttons used to display the board.
         /// </summary>
         private void CreateGrid()
         {
             buttons = new Button[gridSize, gridSize];
-
             int buttonSize = 40;
 
             panelBoard.Controls.Clear();
@@ -105,17 +152,14 @@ namespace MinesweeperGUI
                     btn.Height = buttonSize;
                     btn.Left = col * buttonSize;
                     btn.Top = row * buttonSize;
-
                     btn.Tag = new Point(row, col);
-
-                    btn.MouseUp += Button_MouseUp;
-
-                    panelBoard.Controls.Add(btn);
-                    buttons[row, col] = btn;
-
+                    btn.MouseUp += ButtonMouseUp;
                     btn.BackgroundImageLayout = ImageLayout.Stretch;
                     btn.BackgroundImage = hiddenTileImage;
                     btn.Text = "";
+
+                    panelBoard.Controls.Add(btn);
+                    buttons[row, col] = btn;
                 }
             }
 
@@ -124,15 +168,17 @@ namespace MinesweeperGUI
         }
 
         /// <summary>
-        /// Handles button click and visits the selected cell
+        /// Handles mouse clicks on board buttons and updates the selected cell.
         /// </summary>
-        private void Button_MouseUp(object? sender, MouseEventArgs e)
+        /// <param name="sender">The button that triggered the event.</param>
+        /// <param name="e">Mouse event data.</param>
+        private void ButtonMouseUp(object? sender, MouseEventArgs e)
         {
-            Button btn = (Button)sender;
-            Point p = (Point)btn.Tag;
+            Button btn = (Button)sender!;
+            Point point = (Point)btn.Tag;
 
-            int row = p.X;
-            int col = p.Y;
+            int row = point.X;
+            int col = point.Y;
 
             if (e.Button == MouseButtons.Right)
             {
@@ -150,7 +196,7 @@ namespace MinesweeperGUI
         }
 
         /// <summary>
-        /// Updates all buttons based on the board state
+        /// Updates the user interface based on the current board state.
         /// </summary>
         private void UpdateBoardUI()
         {
@@ -197,7 +243,7 @@ namespace MinesweeperGUI
         }
 
         /// <summary>
-        /// Checks whether the player won, lost, or is still playing
+        /// Checks the current game state and handles win or loss conditions.
         /// </summary>
         private void CheckGameState()
         {
@@ -224,7 +270,7 @@ namespace MinesweeperGUI
         }
 
         /// <summary>
-        /// Reveals all bomb locations
+        /// Reveals all bomb locations after the game is lost.
         /// </summary>
         private void RevealBombs()
         {
@@ -243,7 +289,7 @@ namespace MinesweeperGUI
         }
 
         /// <summary>
-        /// Disables all buttons after game ends
+        /// Disables all buttons after the game ends.
         /// </summary>
         private void DisableBoard()
         {
@@ -257,31 +303,26 @@ namespace MinesweeperGUI
         }
 
         /// <summary>
-        /// GameTimer
+        /// Handles timer tick events during the game.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GameTimer_Tick(object? sender, EventArgs e)
+        /// <param name="sender">The timer that triggered the event.</param>
+        /// <param name="e">Event data.</param>
+        private void GameTimerTick(object? sender, EventArgs e)
         {
-            
         }
 
         /// <summary>
-        /// Calculates the score and adds diffuclty level for bonus
+        /// Calculates the final score based on difficulty and elapsed time.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The calculated player score.</returns>
         private int CalculateScore()
         {
             int baseScore = 1000;
             int difficultyBonus = difficultyLevel * 100;
-
             TimeSpan gameTime = DateTime.Now - startTime;
             int timePenalty = (int)gameTime.TotalSeconds;
 
             return baseScore + difficultyBonus - timePenalty;
         }
-
     }
 }
-
-

@@ -1,7 +1,8 @@
-/*William Castellanos
+/*Darius Drake William Castellanos
  * CST-250
- * Milestone 3
- * 3/2/26
+ * Milestone 5
+ * Updated by Will Castellanos
+ * 2/17/26
  */
 
 using System.Linq;
@@ -11,18 +12,19 @@ using Xunit;
 
 namespace MinesweeperTests
 {
+    /// <summary>
+    /// Contains xUnit tests for the BoardLogic class across multiple milestones.
+    /// </summary>
     public class BoardLogicMilestoneTests
     {
-        // ============================
-        // Milestone 2 Tests
-        // ============================
-
-        // Verifies the game is lost when a bomb cell is visited
+        /// <summary>
+        /// Verifies the game is lost when a bomb cell is visited.
+        /// </summary>
         [Fact]
-        public void DetermineGameState_ReturnsLost_WhenBombCellIsVisited()
+        public void DetermineGameStateReturnsLostWhenBombCellIsVisited()
         {
-            var logic = new BoardLogic();
-            var board = new BoardModel(2);
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
 
             board.Cells[0, 0].IsBomb = true;
             board.Cells[0, 0].IsVisited = true;
@@ -32,16 +34,17 @@ namespace MinesweeperTests
             Assert.Equal(GameState.Lost, state);
         }
 
-        // Verifies the game remains in progress when a safe cell is not visited
+        /// <summary>
+        /// Verifies the game remains in progress when a safe cell is not visited.
+        /// </summary>
         [Fact]
-        public void DetermineGameState_ReturnsInProgress_WhenSafeCellNotVisited()
+        public void DetermineGameStateReturnsInProgressWhenSafeCellIsNotVisited()
         {
-            var logic = new BoardLogic();
-            var board = new BoardModel(2);
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
 
             board.Cells[0, 0].IsBomb = true;
             board.Cells[0, 0].IsFlagged = true;
-
             board.Cells[0, 1].IsVisited = false;
 
             GameState state = logic.DetermineGameState(board);
@@ -49,33 +52,17 @@ namespace MinesweeperTests
             Assert.Equal(GameState.InProgress, state);
         }
 
-        // Verifies the game is still in progress if a bomb exists but is not flagged
+        /// <summary>
+        /// Verifies the game is won when all safe cells are visited.
+        /// </summary>
         [Fact]
-        public void DetermineGameState_ReturnsInProgress_WhenBombNotFlagged()
+        public void DetermineGameStateReturnsWonWhenAllSafeCellsAreVisited()
         {
-            var logic = new BoardLogic();
-            var board = new BoardModel(2);
-
-            VisitAllSafeCells(board);
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
 
             board.Cells[0, 0].IsBomb = true;
-            board.Cells[0, 0].IsFlagged = false;
             board.Cells[0, 0].IsVisited = false;
-
-            GameState state = logic.DetermineGameState(board);
-
-            Assert.Equal(GameState.InProgress, state);
-        }
-
-        // Verifies the game is won when all safe cells are visited and bombs are flagged
-        [Fact]
-        public void DetermineGameState_ReturnsWon_WhenAllSafeVisited_AndAllBombsFlagged()
-        {
-            var logic = new BoardLogic();
-            var board = new BoardModel(2);
-
-            board.Cells[0, 0].IsBomb = true;
-            board.Cells[0, 0].IsFlagged = true;
 
             VisitAllSafeCells(board);
 
@@ -84,12 +71,14 @@ namespace MinesweeperTests
             Assert.Equal(GameState.Won, state);
         }
 
-        // Ensures a flagged cell cannot be visited
+        /// <summary>
+        /// Ensures a flagged cell cannot be visited.
+        /// </summary>
         [Fact]
-        public void VisitCell_DoesNotVisit_WhenCellIsFlagged()
+        public void VisitCellDoesNotVisitWhenCellIsFlagged()
         {
-            var logic = new BoardLogic();
-            var board = new BoardModel(2);
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
 
             board.Cells[1, 1].IsFlagged = true;
 
@@ -98,12 +87,14 @@ namespace MinesweeperTests
             Assert.False(board.Cells[1, 1].IsVisited);
         }
 
-        // Ensures a visited cell cannot be flagged
+        /// <summary>
+        /// Ensures a visited cell cannot be flagged.
+        /// </summary>
         [Fact]
-        public void FlagCell_DoesNotFlag_WhenCellIsVisited()
+        public void FlagCellDoesNotFlagWhenCellIsVisited()
         {
-            var logic = new BoardLogic();
-            var board = new BoardModel(2);
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
 
             board.Cells[1, 1].IsVisited = true;
 
@@ -112,91 +103,95 @@ namespace MinesweeperTests
             Assert.False(board.Cells[1, 1].IsFlagged);
         }
 
-        // ============================
-        // Milestone 3 Tests - FloodFill
-        // ============================
-
-        // Verifies FloodFill expands when starting on a zero neighbor cell
+        /// <summary>
+        /// Verifies FloodFill expands when starting on a zero-neighbor cell.
+        /// </summary>
         [Fact]
-        public void FloodFill_ZeroCell_ExpandsToMultipleCells()
+        public void FloodFillZeroCellExpandsToMultipleCells()
         {
-            var logic = new BoardLogic();
-            var board = new BoardModel(3);
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(3);
 
             logic.CountBombsNearby(board);
-
             logic.FloodFill(board, 1, 1);
 
-            int visited = board.Cells.Cast<CellModel>()
-                                     .Count(c => c.IsVisited);
+            int visitedCount = board.Cells.Cast<CellModel>()
+                                          .Count(cell => cell.IsVisited);
 
-            Assert.True(visited > 1);
+            Assert.True(visitedCount > 1);
         }
 
-        // Verifies FloodFill does not recurse on a numbered cell
+        /// <summary>
+        /// Verifies FloodFill does not recurse when starting on a numbered cell.
+        /// </summary>
         [Fact]
-        public void FloodFill_NumberedCell_DoesNotRecurse()
+        public void FloodFillNumberedCellDoesNotRecurse()
         {
-            var logic = new BoardLogic();
-            var board = new BoardModel(3);
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(3);
 
             board.Cells[0, 1].IsBomb = true;
             logic.CountBombsNearby(board);
-
             logic.FloodFill(board, 0, 0);
 
-            int visited = board.Cells.Cast<CellModel>()
-                                     .Count(c => c.IsVisited);
+            int visitedCount = board.Cells.Cast<CellModel>()
+                                          .Count(cell => cell.IsVisited);
 
-            Assert.Equal(1, visited);
+            Assert.Equal(1, visitedCount);
         }
 
-        // Verifies FloodFill does nothing when starting on a bomb
+        /// <summary>
+        /// Verifies FloodFill visits a bomb cell and stops.
+        /// </summary>
         [Fact]
-        public void FloodFill_BombCell_DoesNothing()
+        public void FloodFillBombCellVisitsOnlyThatCell()
         {
-            var logic = new BoardLogic();
-            var board = new BoardModel(3);
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(3);
 
             board.Cells[1, 1].IsBomb = true;
 
             logic.FloodFill(board, 1, 1);
 
-            Assert.False(board.Cells[1, 1].IsVisited);
+            Assert.True(board.Cells[1, 1].IsVisited);
         }
 
-        // Verifies FloodFill does not revisit cells and cause infinite recursion
+        /// <summary>
+        /// Verifies FloodFill does not revisit cells and cause repeated expansion.
+        /// </summary>
         [Fact]
-        public void FloodFill_DoesNotRevisitCells()
+        public void FloodFillDoesNotRevisitCells()
         {
-            var logic = new BoardLogic();
-            var board = new BoardModel(3);
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(3);
 
             logic.CountBombsNearby(board);
+            logic.FloodFill(board, 1, 1);
+
+            int firstVisitCount = board.Cells.Cast<CellModel>()
+                                             .Count(cell => cell.IsVisited);
 
             logic.FloodFill(board, 1, 1);
 
-            int firstVisit = board.Cells.Cast<CellModel>()
-                                        .Count(c => c.IsVisited);
+            int secondVisitCount = board.Cells.Cast<CellModel>()
+                                              .Count(cell => cell.IsVisited);
 
-            logic.FloodFill(board, 1, 1);
-
-            int secondVisit = board.Cells.Cast<CellModel>()
-                                         .Count(c => c.IsVisited);
-
-            Assert.Equal(firstVisit, secondVisit);
+            Assert.Equal(firstVisitCount, secondVisitCount);
         }
 
-        // Helper method to mark all non bomb cells as visited
+        /// <summary>
+        /// Marks all non-bomb cells on the board as visited.
+        /// </summary>
+        /// <param name="board">The board whose safe cells will be visited.</param>
         private static void VisitAllSafeCells(BoardModel board)
         {
-            for (int r = 0; r < board.Size; r++)
+            for (int row = 0; row < board.Size; row++)
             {
-                for (int c = 0; c < board.Size; c++)
+                for (int col = 0; col < board.Size; col++)
                 {
-                    if (!board.Cells[r, c].IsBomb)
+                    if (!board.Cells[row, col].IsBomb)
                     {
-                        board.Cells[r, c].IsVisited = true;
+                        board.Cells[row, col].IsVisited = true;
                     }
                 }
             }

@@ -1,42 +1,55 @@
-﻿/*Darius Drake
+﻿/*Darius Drake William Castellanos
  * CST-250
  * Milestone 5
  * Updated by Will Castellanos
  * 2/17/26
  */
+
 using MinesweeperClassLibrary.Models;
 using System;
 
 namespace MinesweeperClassLibrary.BusinessLogicLayer
 {
+    /// <summary>
+    /// Contains the business logic for the Minesweeper game board,
+    /// including bomb placement, reward placement, visiting cells,
+    /// flagging cells, checking game state, and flood fill behavior.
+    /// </summary>
     public class BoardLogic
     {
-        // Use one Random instance to avoid repeated identical random values
-        private static readonly Random _rand = new Random();
+        /// <summary>
+        /// Random number generator used for bomb and reward placement.
+        /// </summary>
+        private static readonly Random _random = new Random();
 
         /// <summary>
-        /// Places bombs on the board
+        /// Places bombs on the board based on the selected difficulty level.
         /// </summary>
-        /// <param name="board"></param>
-        /// <param name="difficultyLevel"></param>
+        /// <param name="board">The game board being initialized.</param>
+        /// <param name="difficultyLevel">The selected difficulty level.</param>
         public void SetUpBombs(BoardModel board, int difficultyLevel)
         {
             int numberOfBombs;
 
             if (difficultyLevel == 1)
+            {
                 numberOfBombs = board.Size * 2;
+            }
             else if (difficultyLevel == 2)
+            {
                 numberOfBombs = board.Size * 3;
+            }
             else
+            {
                 numberOfBombs = board.Size * 4;
+            }
 
-            Random rand = new Random();
             int bombsPlaced = 0;
 
             while (bombsPlaced < numberOfBombs)
             {
-                int row = rand.Next(0, board.Size);
-                int col = rand.Next(0, board.Size);
+                int row = _random.Next(0, board.Size);
+                int col = _random.Next(0, board.Size);
 
                 if (!board.Cells[row, col].IsBomb)
                 {
@@ -47,26 +60,28 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
         }
 
         /// <summary>
-        /// Randomly places special rewards on NON-bomb cells.
+        /// Randomly places special rewards on non-bomb cells.
         /// </summary>
+        /// <param name="board">The game board receiving rewards.</param>
+        /// <param name="rewardsToPlace">The number of rewards to place.</param>
         public void SetUpRewards(BoardModel board, int rewardsToPlace = 3)
         {
             if (board == null)
+            {
                 throw new ArgumentNullException(nameof(board));
+            }
 
             int size = board.Size;
 
-            // Safety: if board is tiny, don't over-place rewards
             rewardsToPlace = Math.Max(0, Math.Min(rewardsToPlace, (size * size) - board.Difficulty));
 
             while (rewardsToPlace > 0)
             {
-                int row = _rand.Next(size);
-                int col = _rand.Next(size);
+                int row = _random.Next(size);
+                int col = _random.Next(size);
 
-                var cell = board.Cells[row, col];
+                CellModel cell = board.Cells[row, col];
 
-                // Don't place rewards on bombs and don't double-place
                 if (!cell.IsBomb && !cell.HasSpecialReward)
                 {
                     cell.HasSpecialReward = true;
@@ -76,13 +91,16 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
         }
 
         /// <summary>
-        /// Counts neighboring bombs for each cell.
-        /// Bomb cells get NumberOfBombNeighbors = 9.
+        /// Counts the number of neighboring bombs for each cell on the board.
+        /// Bomb cells are assigned a value of 9.
         /// </summary>
+        /// <param name="board">The game board to evaluate.</param>
         public void CountBombsNearby(BoardModel board)
         {
             if (board == null)
+            {
                 throw new ArgumentNullException(nameof(board));
+            }
 
             int size = board.Size;
 
@@ -103,13 +121,19 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
                         for (int c = col - 1; c <= col + 1; c++)
                         {
                             if (r < 0 || r >= size || c < 0 || c >= size)
+                            {
                                 continue;
+                            }
 
                             if (r == row && c == col)
+                            {
                                 continue;
+                            }
 
                             if (board.Cells[r, c].IsBomb)
+                            {
                                 bombCount++;
+                            }
                         }
                     }
 
@@ -119,57 +143,83 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
         }
 
         /// <summary>
-        /// Visits a cell (marks IsVisited true) if within bounds and not flagged.
-        /// If the cell contains a special reward, increment board.RewardsRemaining and consume it.
+        /// Visits a cell if it is within bounds and not flagged.
         /// </summary>
+        /// <param name="board">The game board containing the cell.</param>
+        /// <param name="row">The row of the selected cell.</param>
+        /// <param name="col">The column of the selected cell.</param>
         public void VisitCell(BoardModel board, int row, int col)
         {
             if (board == null)
+            {
                 throw new ArgumentNullException(nameof(board));
+            }
 
-            if (!InBounds(board, row, col))
+            if (!IsInBounds(board, row, col))
+            {
                 return;
+            }
 
             if (board.Cells[row, col].IsFlagged)
+            {
                 return;
+            }
 
-          FloodFill(board, row, col);
+            FloodFill(board, row, col);
         }
 
         /// <summary>
-        /// Toggles flag on a cell if within bounds and not already visited.
+        /// Toggles the flagged state of a cell if it is within bounds and not already visited.
         /// </summary>
+        /// <param name="board">The game board containing the cell.</param>
+        /// <param name="row">The row of the selected cell.</param>
+        /// <param name="col">The column of the selected cell.</param>
         public void FlagCell(BoardModel board, int row, int col)
         {
             if (board == null)
+            {
                 throw new ArgumentNullException(nameof(board));
+            }
 
-            if (!InBounds(board, row, col))
+            if (!IsInBounds(board, row, col))
+            {
                 return;
+            }
 
             if (board.Cells[row, col].IsVisited)
+            {
                 return;
+            }
 
             board.Cells[row, col].IsFlagged = !board.Cells[row, col].IsFlagged;
         }
 
         /// <summary>
-        /// Uses one reward to "peek" at a cell.
-        /// Returns:
-        /// - true  => cell IS a bomb
-        /// - false => cell is NOT a bomb
-        /// - null  => cannot peek (no rewards or out of bounds)
+        /// Uses one reward to peek at whether a selected cell contains a bomb.
         /// </summary>
+        /// <param name="board">The game board containing the cell.</param>
+        /// <param name="row">The row of the selected cell.</param>
+        /// <param name="col">The column of the selected cell.</param>
+        /// <returns>
+        /// True if the cell is a bomb, false if it is not a bomb,
+        /// or null if the action cannot be completed.
+        /// </returns>
         public bool? UseRewardPeek(BoardModel board, int row, int col)
         {
             if (board == null)
+            {
                 throw new ArgumentNullException(nameof(board));
+            }
 
-            if (!InBounds(board, row, col))
+            if (!IsInBounds(board, row, col))
+            {
                 return null;
+            }
 
             if (board.RewardsRemaining <= 0)
+            {
                 return null;
+            }
 
             board.RewardsRemaining--;
 
@@ -177,19 +227,19 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
         }
 
         /// <summary>
-        /// Determines if the game is Won, Lost, or InProgress.
-        /// Lost: any bomb cell visited.
-        /// Won: all non-bomb cells visited AND all bomb cells flagged.
-        /// InProgress: otherwise.
+        /// Determines whether the current game state is won, lost, or still in progress.
         /// </summary>
+        /// <param name="board">The game board to evaluate.</param>
+        /// <returns>The current game state.</returns>
         public GameState DetermineGameState(BoardModel board)
         {
             if (board == null)
+            {
                 throw new ArgumentNullException(nameof(board));
+            }
 
             int size = board.Size;
 
-            // Lose if any bomb was visited
             for (int row = 0; row < size; row++)
             {
                 for (int col = 0; col < size; col++)
@@ -204,7 +254,6 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
                 }
             }
 
-            // Still playing if any non-bomb cell is not visited yet
             for (int row = 0; row < size; row++)
             {
                 for (int col = 0; col < size; col++)
@@ -219,71 +268,78 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
                 }
             }
 
-            // Otherwise, player has won
             board.GameState = GameState.Won;
             return GameState.Won;
         }
 
         /// <summary>
-        /// Recursive flood fill that shows the connected zero - neighbor cells
+        /// Recursively reveals connected cells with zero neighboring bombs.
         /// </summary>
-        /// <param name="board"></param>
-        /// <param name="row"></param>
-        /// <param name="col"></param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="board">The game board containing the cell.</param>
+        /// <param name="row">The row of the selected cell.</param>
+        /// <param name="col">The column of the selected cell.</param>
         public void FloodFill(BoardModel board, int row, int col)
         {
             if (board == null)
+            {
                 throw new ArgumentNullException(nameof(board));
+            }
 
-            if (!InBounds(board, row, col))
+            if (!IsInBounds(board, row, col))
+            {
                 return;
+            }
 
-            var cell = board.Cells[row, col];
+            CellModel cell = board.Cells[row, col];
 
-            // Stop if already visited or flagged
             if (cell.IsVisited || cell.IsFlagged)
+            {
                 return;
+            }
 
-            // If bomb, mark visited and stop
             if (cell.IsBomb)
             {
                 cell.IsVisited = true;
                 return;
             }
 
-            // Mark visited
             cell.IsVisited = true;
 
-            // Collect reward if present
             if (cell.HasSpecialReward)
             {
                 board.RewardsRemaining++;
                 cell.HasSpecialReward = false;
             }
 
-            // Stop recursion if numbered cell
             if (cell.NumberOfBombNeighbors > 0)
+            {
                 return;
+            }
 
-            // Recurse in 8 directions
             for (int r = row - 1; r <= row + 1; r++)
             {
                 for (int c = col - 1; c <= col + 1; c++)
                 {
                     if (r == row && c == col)
+                    {
                         continue;
+                    }
 
                     FloodFill(board, r, c);
                 }
             }
         }
 
-        // Helper: bounds check
-        private bool InBounds(BoardModel board, int row, int col)
+        /// <summary>
+        /// Determines whether the specified row and column are within the board boundaries.
+        /// </summary>
+        /// <param name="board">The game board being checked.</param>
+        /// <param name="row">The row to validate.</param>
+        /// <param name="col">The column to validate.</param>
+        /// <returns>True if the row and column are inside the board; otherwise, false.</returns>
+        private bool IsInBounds(BoardModel board, int row, int col)
         {
             return row >= 0 && row < board.Size && col >= 0 && col < board.Size;
         }
     }
 }
-/// Test Comment/ 

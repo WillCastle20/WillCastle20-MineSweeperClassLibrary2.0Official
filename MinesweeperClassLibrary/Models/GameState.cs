@@ -1,22 +1,19 @@
-﻿/*Darius Drake
+﻿/*Darius Drake William Castellanos
  * CST-250
- * Milestone 4
- * 3/31/26
+ * Milestone 5
+ * Updated by Will Castellanos
+ * 2/17/26
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinesweeperClassLibrary.Models
 {
+    /// <summary>
+    /// Represents the current state of the Minesweeper game.
+    /// </summary>
     public enum GameState
     {
-        InProgress, 
+        InProgress,
         Won,
         Lost
     }
 }
-
-

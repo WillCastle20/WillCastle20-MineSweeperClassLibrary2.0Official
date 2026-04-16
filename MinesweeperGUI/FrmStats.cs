@@ -1,28 +1,57 @@
-﻿using MinesweeperClassLibrary.Models;
+﻿/*Darius Drake William Castellanos
+ * CST-250
+ * Milestone 5
+ * Updated by Will Castellanos
+ * 2/17/26
+ */
+
+using MinesweeperClassLibrary.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace MinesweeperGUI
 {
+    /// <summary>
+    /// Represents the statistics form used to display, save, load,
+    /// and sort Minesweeper game results.
+    /// </summary>
     public partial class FrmStats : Form
     {
-        private List<GameStat> _gameStats = new List<GameStat>();
+        /// <summary>
+        /// Stores the list of game statistics displayed in the grid.
+        /// </summary>
+        private List<GameStat> gameStats = new List<GameStat>();
 
+        /// <summary>
+        /// Initializes a new instance of the FrmStats form.
+        /// </summary>
         public FrmStats()
         {
             InitializeComponent();
             RefreshGrid();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the FrmStats form with a starting stat entry.
+        /// </summary>
+        /// <param name="stat">The game statistic to add to the grid.</param>
         public FrmStats(GameStat stat)
         {
             InitializeComponent();
-            _gameStats.Add(stat);
+            gameStats.Add(stat);
             RefreshGrid();
         }
 
+        /// <summary>
+        /// Refreshes the DataGridView with the current list of game statistics.
+        /// </summary>
         private void RefreshGrid()
         {
             DgvStats.DataSource = null;
-            DgvStats.DataSource = _gameStats.Select(stat => new
+            DgvStats.DataSource = gameStats.Select(stat => new
             {
                 stat.Id,
                 stat.Name,
@@ -32,17 +61,24 @@ namespace MinesweeperGUI
             }).ToList();
         }
 
-        private void MnuSaveClickEH(object sender, EventArgs e)
+        /// <summary>
+        /// Saves the current list of game statistics to a text file.
+        /// </summary>
+        /// <param name="sender">The control that triggered the event.</param>
+        /// <param name="e">The event data.</param>
+        private void MnuSaveClick(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Text Files (*.txt)|*.txt";
-            saveFileDialog.Title = "Save High Scores";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Text Files (*.txt)|*.txt",
+                Title = "Save High Scores"
+            };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 using StreamWriter writer = new StreamWriter(saveFileDialog.FileName);
 
-                foreach (GameStat stat in _gameStats)
+                foreach (GameStat stat in gameStats)
                 {
                     writer.WriteLine($"{stat.Id},{stat.Name},{stat.Score},{stat.GameTime},{stat.DatePlayed}");
                 }
@@ -51,15 +87,22 @@ namespace MinesweeperGUI
             }
         }
 
-        private void MnuLoadClickEH(object sender, EventArgs e)
+        /// <summary>
+        /// Loads game statistics from a text file into the grid.
+        /// </summary>
+        /// <param name="sender">The control that triggered the event.</param>
+        /// <param name="e">The event data.</param>
+        private void MnuLoadClick(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Text Files (*.txt)|*.txt";
-            openFileDialog.Title = "Load High Scores";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Text Files (*.txt)|*.txt",
+                Title = "Load High Scores"
+            };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                _gameStats.Clear();
+                gameStats.Clear();
 
                 string[] lines = File.ReadAllLines(openFileDialog.FileName);
 
@@ -78,7 +121,7 @@ namespace MinesweeperGUI
                             DatePlayed = DateTime.Parse(parts[4])
                         };
 
-                        _gameStats.Add(stat);
+                        gameStats.Add(stat);
                     }
                 }
 
@@ -87,32 +130,57 @@ namespace MinesweeperGUI
             }
         }
 
-        private void MnuExitClickEH(object sender, EventArgs e)
+        /// <summary>
+        /// Closes the statistics form.
+        /// </summary>
+        /// <param name="sender">The control that triggered the event.</param>
+        /// <param name="e">The event data.</param>
+        private void MnuExitClick(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        private void MnuSortByNameClickEH(object sender, EventArgs e)
+        /// <summary>
+        /// Sorts the statistics list by player name.
+        /// </summary>
+        /// <param name="sender">The control that triggered the event.</param>
+        /// <param name="e">The event data.</param>
+        private void MnuSortByNameClick(object sender, EventArgs e)
         {
-            _gameStats = _gameStats.OrderBy(stat => stat.Name).ToList();
+            gameStats = gameStats.OrderBy(stat => stat.Name).ToList();
             RefreshGrid();
         }
 
-        private void MnuSortByScoreClickEH(object sender, EventArgs e)
+        /// <summary>
+        /// Sorts the statistics list by score in descending order.
+        /// </summary>
+        /// <param name="sender">The control that triggered the event.</param>
+        /// <param name="e">The event data.</param>
+        private void MnuSortByScoreClick(object sender, EventArgs e)
         {
-            _gameStats = _gameStats.OrderByDescending(stat => stat.Score).ToList();
+            gameStats = gameStats.OrderByDescending(stat => stat.Score).ToList();
             RefreshGrid();
         }
 
-        private void MnuSortByDateClickEH(object sender, EventArgs e)
+        /// <summary>
+        /// Sorts the statistics list by date in descending order.
+        /// </summary>
+        /// <param name="sender">The control that triggered the event.</param>
+        /// <param name="e">The event data.</param>
+        private void MnuSortByDateClick(object sender, EventArgs e)
         {
-            _gameStats = _gameStats.OrderByDescending(stat => stat.DatePlayed).ToList();
+            gameStats = gameStats.OrderByDescending(stat => stat.DatePlayed).ToList();
             RefreshGrid();
         }
 
-        private void BtnCloseClickEH(object sender, EventArgs e)
+        /// <summary>
+        /// Closes the statistics form when the close button is clicked.
+        /// </summary>
+        /// <param name="sender">The control that triggered the event.</param>
+        /// <param name="e">The event data.</param>
+        private void BtnCloseClick(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }
