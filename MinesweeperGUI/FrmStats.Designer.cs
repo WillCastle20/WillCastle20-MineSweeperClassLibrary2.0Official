@@ -49,7 +49,7 @@
             MenuStats.Items.AddRange(new ToolStripItem[] { MnuFile, MnuSort });
             MenuStats.Location = new Point(0, 0);
             MenuStats.Name = "MenuStats";
-            MenuStats.Size = new Size(800, 33);
+            MenuStats.Size = new Size(1025, 33);
             MenuStats.TabIndex = 0;
             MenuStats.Text = "menuStrip1";
             // 
@@ -63,21 +63,21 @@
             // MnuSave
             // 
             MnuSave.Name = "MnuSave";
-            MnuSave.Size = new Size(270, 34);
+            MnuSave.Size = new Size(153, 34);
             MnuSave.Text = "Save";
             MnuSave.Click += MnuSaveClickEH;
             // 
             // MnuLoad
             // 
             MnuLoad.Name = "MnuLoad";
-            MnuLoad.Size = new Size(270, 34);
+            MnuLoad.Size = new Size(153, 34);
             MnuLoad.Text = "Load";
             MnuLoad.Click += MnuLoadClickEH;
             // 
             // MnuExit
             // 
             MnuExit.Name = "MnuExit";
-            MnuExit.Size = new Size(270, 34);
+            MnuExit.Size = new Size(153, 34);
             MnuExit.Text = "Exit";
             MnuExit.Click += MnuExitClickEH;
             // 
@@ -91,21 +91,21 @@
             // MnuSortByName
             // 
             MnuSortByName.Name = "MnuSortByName";
-            MnuSortByName.Size = new Size(270, 34);
+            MnuSortByName.Size = new Size(185, 34);
             MnuSortByName.Text = "By Name";
             MnuSortByName.Click += MnuSortByNameClickEH;
             // 
             // MnuSortByScore
             // 
             MnuSortByScore.Name = "MnuSortByScore";
-            MnuSortByScore.Size = new Size(270, 34);
+            MnuSortByScore.Size = new Size(185, 34);
             MnuSortByScore.Text = "By Score";
             MnuSortByScore.Click += MnuSortByScoreClickEH;
             // 
             // MnuSortByDate
             // 
             MnuSortByDate.Name = "MnuSortByDate";
-            MnuSortByDate.Size = new Size(270, 34);
+            MnuSortByDate.Size = new Size(185, 34);
             MnuSortByDate.Text = "By Date";
             MnuSortByDate.Click += MnuSortByDateClickEH;
             // 
@@ -115,7 +115,7 @@
             DgvStats.Location = new Point(82, 74);
             DgvStats.Name = "DgvStats";
             DgvStats.RowHeadersWidth = 62;
-            DgvStats.Size = new Size(360, 225);
+            DgvStats.Size = new Size(736, 225);
             DgvStats.TabIndex = 1;
             // 
             // BtnClose
@@ -132,7 +132,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1025, 450);
             Controls.Add(BtnClose);
             Controls.Add(DgvStats);
             Controls.Add(MenuStats);

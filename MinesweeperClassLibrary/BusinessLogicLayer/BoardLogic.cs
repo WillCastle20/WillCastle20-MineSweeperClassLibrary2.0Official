@@ -189,12 +189,13 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
 
             int size = board.Size;
 
-            // Lost if any bomb is visited
+            // Lose if any bomb was visited
             for (int row = 0; row < size; row++)
             {
                 for (int col = 0; col < size; col++)
                 {
-                    var cell = board.Cells[row, col];
+                    CellModel cell = board.Cells[row, col];
+
                     if (cell.IsBomb && cell.IsVisited)
                     {
                         board.GameState = GameState.Lost;
@@ -203,20 +204,14 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
                 }
             }
 
-            // In progress if any safe cell unvisited OR any bomb unflagged
+            // Still playing if any non-bomb cell is not visited yet
             for (int row = 0; row < size; row++)
             {
                 for (int col = 0; col < size; col++)
                 {
-                    var cell = board.Cells[row, col];
+                    CellModel cell = board.Cells[row, col];
 
                     if (!cell.IsBomb && !cell.IsVisited)
-                    {
-                        board.GameState = GameState.InProgress;
-                        return GameState.InProgress;
-                    }
-
-                    if (cell.IsBomb && !cell.IsFlagged)
                     {
                         board.GameState = GameState.InProgress;
                         return GameState.InProgress;
@@ -224,9 +219,11 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
                 }
             }
 
+            // Otherwise, player has won
             board.GameState = GameState.Won;
             return GameState.Won;
         }
+
         /// <summary>
         /// Recursive flood fill that shows the connected zero - neighbor cells
         /// </summary>

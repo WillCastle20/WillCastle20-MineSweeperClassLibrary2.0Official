@@ -30,30 +30,24 @@ namespace MinesweeperGUI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnStartGame_ClickEH(object sender, EventArgs e)
-        {
-            int size = int.TryParse(txtSize.Text, out int result) ? result : 5;
+{
+    int size = int.TryParse(txtSize.Text, out int result) ? result : 5;
 
-            string difficulty = cmbDifficulty.SelectedItem?.ToString() ?? "Easy";
+    string difficulty = cmbDifficulty.SelectedItem?.ToString() ?? "Easy";
 
+    int difficultyLevel = 1;
 
+    if (difficulty == "Easy")
+        difficultyLevel = 1;
+    else if (difficulty == "Medium")
+        difficultyLevel = 2;
+    else
+        difficultyLevel = 3;
 
-            int difficultyLevel = 1;
-
-            if (difficulty == "Easy")
-                difficultyLevel = 1;
-            else if (difficulty == "Medium")
-                difficultyLevel = 2;
-            else
-                difficultyLevel = 3;
-
-            FrmGame gameForm = new FrmGame(size, difficultyLevel);
-            gameForm.Show();
-            this.Hide();
-
-            FrmWinner frmWinner = new FrmWinner(2500, new TimeSpan(0, 1, 42));
-            frmWinner.ShowDialog();
-
-        }
+    FrmGame gameForm = new FrmGame(size, difficultyLevel);
+    gameForm.Show();
+    this.Hide();
+}
 
         /// <summary>
         /// Loads the dropdown
