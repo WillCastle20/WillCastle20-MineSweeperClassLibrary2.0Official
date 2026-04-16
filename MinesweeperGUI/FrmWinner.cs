@@ -7,21 +7,29 @@ namespace MinesweeperGUI
         private readonly int _score;
         private readonly TimeSpan _gameTime;
 
-        public FrmWinner()
-        {
-            InitializeComponent();
-            _score = 0;
-            _gameTime = TimeSpan.Zero;
-            LblScore.Text = $"Score: {_score}";
-        }
+        private int score;
+        private TimeSpan gameTime;
 
+        /// <summary>
+        /// Constructor for FrmWinner that receives the player's score and time from FrmGame
+        /// </summary>
+        /// <param name="score"></param>
+        /// <param name="gameTime"></param>
         public FrmWinner(int score, TimeSpan gameTime)
         {
             InitializeComponent();
-            _score = score;
-            _gameTime = gameTime;
-            LblScore.Text = $"Score: {_score}";
+
+            // Stores the score
+            this.score = score;
+
+            // Stores the game time
+            this.gameTime = gameTime;
+
+            LblScore.Text = "Score: " + score.ToString();
+            //lblTime.Text = "Time: " + gameTime.TotalSeconds.ToString("0") + " sec";
         }
+
+
 
         private void BtnSubmitClickEH(object sender, EventArgs e)
         {

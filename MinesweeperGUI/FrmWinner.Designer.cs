@@ -37,33 +37,37 @@
             // LblMessage
             // 
             LblMessage.AutoSize = true;
-            LblMessage.Location = new Point(83, 56);
+            LblMessage.Location = new Point(108, 72);
+            LblMessage.Margin = new Padding(4, 0, 4, 0);
             LblMessage.Name = "LblMessage";
-            LblMessage.Size = new Size(352, 25);
+            LblMessage.Size = new Size(473, 32);
             LblMessage.TabIndex = 0;
             LblMessage.Text = "Congratulations, you win. Enter your name.";
             // 
             // LblScore
             // 
             LblScore.AutoSize = true;
-            LblScore.Location = new Point(83, 115);
+            LblScore.Location = new Point(108, 147);
+            LblScore.Margin = new Padding(4, 0, 4, 0);
             LblScore.Name = "LblScore";
-            LblScore.Size = new Size(60, 25);
+            LblScore.Size = new Size(78, 32);
             LblScore.TabIndex = 1;
             LblScore.Text = "Score:";
             // 
             // TxtName
             // 
-            TxtName.Location = new Point(83, 191);
+            TxtName.Location = new Point(108, 244);
+            TxtName.Margin = new Padding(4, 4, 4, 4);
             TxtName.Name = "TxtName";
-            TxtName.Size = new Size(150, 31);
+            TxtName.Size = new Size(194, 39);
             TxtName.TabIndex = 2;
             // 
             // BtnSubmit
             // 
-            BtnSubmit.Location = new Point(83, 288);
+            BtnSubmit.Location = new Point(108, 369);
+            BtnSubmit.Margin = new Padding(4, 4, 4, 4);
             BtnSubmit.Name = "BtnSubmit";
-            BtnSubmit.Size = new Size(112, 34);
+            BtnSubmit.Size = new Size(146, 44);
             BtnSubmit.TabIndex = 3;
             BtnSubmit.Text = "OK";
             BtnSubmit.UseVisualStyleBackColor = true;
@@ -71,13 +75,14 @@
             // 
             // FrmWinner
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(2331, 672);
             Controls.Add(BtnSubmit);
             Controls.Add(TxtName);
             Controls.Add(LblScore);
             Controls.Add(LblMessage);
+            Margin = new Padding(4, 4, 4, 4);
             Name = "FrmWinner";
             Text = "Winner";
             ResumeLayout(false);
@@ -90,5 +95,6 @@
         private Label LblScore;
         private TextBox TxtName;
         private Button BtnSubmit;
+        private TextBox textBox1;
     }
 }

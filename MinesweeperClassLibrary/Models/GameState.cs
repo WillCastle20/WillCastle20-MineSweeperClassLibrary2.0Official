@@ -13,7 +13,7 @@ namespace MinesweeperClassLibrary.Models
 {
     public enum GameState
     {
-        InProgress,
+        InProgress, 
         Won,
         Lost
     }
