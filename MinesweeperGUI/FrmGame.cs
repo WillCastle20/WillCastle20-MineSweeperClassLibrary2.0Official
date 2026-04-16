@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using MinesweeperClassLibrary.Models;
 using MinesweeperClassLibrary.BusinessLogicLayer;
 using System.IO;
+using Timer = System.Windows.Forms.Timer;
+
 
 namespace MinesweeperGUI
 {
@@ -30,6 +32,9 @@ namespace MinesweeperGUI
         private Image bombImage;
         private Image flagImage;
         private Image[] numberImages;
+        private DateTime startTime;
+        private Timer gameTimer = new Timer();
+       
 
         /// <summary>
         /// Wires the difficulty level
@@ -39,6 +44,11 @@ namespace MinesweeperGUI
         public FrmGame(int size, int difficultyLevel)
         {
             InitializeComponent();
+            gameTimer = new Timer();
+            gameTimer.Interval = 1000;
+
+            startTime = DateTime.Now;
+            gameTimer.Start();
 
             this.size = size;
             this.difficultyLevel = difficultyLevel;
@@ -67,6 +77,11 @@ namespace MinesweeperGUI
 
             CreateGrid();
             UpdateBoardUI();
+            startTime = DateTime.Now;
+
+            gameTimer.Interval = 1000; // 1 second
+            gameTimer.Tick += GameTimer_Tick;
+            gameTimer.Start();
         }
 
         /// <summary>
@@ -130,6 +145,8 @@ namespace MinesweeperGUI
 
             UpdateBoardUI();
             CheckGameState();
+            gameTimer.Stop();
+            gameTimer.Start();
         }
 
         /// <summary>
@@ -195,6 +212,13 @@ namespace MinesweeperGUI
             else if (state == GameState.Won)
             {
                 MessageBox.Show("You win!");
+
+                int score = CalculateScore();
+                TimeSpan gameTime = DateTime.Now - startTime;
+
+                FrmWinner winnerForm = new FrmWinner(score, gameTime);
+                winnerForm.ShowDialog();
+
                 DisableBoard();
             }
         }
@@ -230,6 +254,31 @@ namespace MinesweeperGUI
                     buttons[row, col].Enabled = false;
                 }
             }
+        }
+
+        /// <summary>
+        /// GameTimer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GameTimer_Tick(object? sender, EventArgs e)
+        {
+            
+        }
+
+        /// <summary>
+        /// Calculates the score and adds diffuclty level for bonus
+        /// </summary>
+        /// <returns></returns>
+        private int CalculateScore()
+        {
+            int baseScore = 1000;
+            int difficultyBonus = difficultyLevel * 100;
+
+            TimeSpan gameTime = DateTime.Now - startTime;
+            int timePenalty = (int)gameTime.TotalSeconds;
+
+            return baseScore + difficultyBonus - timePenalty;
         }
 
     }
