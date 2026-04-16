@@ -1,27 +1,36 @@
-﻿/*Will Castellanos
+﻿/*Darius Drake William Castellanos
  * CST-250
- * Milestone 2
+ * Milestone 5
+ * Updated by Will Castellanos
  * 2/17/26
  */
+
 using System;
 using MinesweeperClassLibrary.BusinessLogicLayer;
 using MinesweeperClassLibrary.Models;
 
+namespace MinesweeperConsole
+{
+    /// <summary>
+    /// Contains the entry point and helper methods for the console version of Minesweeper.
+    /// </summary>
+    internal class Program
+    {
+        /// <summary>
+        /// Starts the console Minesweeper game.
+        /// </summary>
+        /// <param name="args">Command-line arguments.</param>
+        private static void Main(string[] args)
+        {
+            BoardLogic logic = new BoardLogic();
 
-            var logic = new BoardLogic();
-
-            // Main gameplay board
-            var board = new BoardModel(10);
+            BoardModel board = new BoardModel(10);
             int difficultyLevel = 1;
 
-logic.SetUpBombs(board, difficultyLevel);
+            logic.SetUpBombs(board, difficultyLevel);
             logic.CountBombsNearby(board);
-            
-
-            // REQUIRED for rewards to actually exist
             logic.SetUpRewards(board, 3);
 
-            // Optional debug ("technically cheating") - turn OFF before final screenshots if you want
             bool showAnswerKey = false;
 
             if (showAnswerKey)
@@ -37,55 +46,52 @@ logic.SetUpBombs(board, difficultyLevel);
             while (state == GameState.InProgress)
             {
                 Console.Clear();
-                Console.WriteLine("Minesweeper (Milestone 2)");
+                Console.WriteLine("Minesweeper (Milestone 5)");
                 Console.WriteLine($"Rewards Available: {board.RewardsRemaining}");
-                Console.WriteLine("Actions: 1 = Visit, 2 = Flag, 3 = Use Reward (peek)");
+                Console.WriteLine("Actions: 1 = Visit, 2 = Flag, 3 = Use Reward (Peek)");
                 Console.WriteLine();
 
-                PrintBoard(board, revealBombs: false);
+                PrintBoard(board, false);
 
                 int row = ReadInt($"Enter row (0-{board.Size - 1}): ", 0, board.Size - 1);
-                int col = ReadInt($"Enter col (0-{board.Size - 1}): ", 0, board.Size - 1);
-                int action = ReadInt("Enter action (1=Visit, 2=Flag, 3=Use Reward): ", 1, 3);
+                int col = ReadInt($"Enter column (0-{board.Size - 1}): ", 0, board.Size - 1);
+                int action = ReadInt("Enter action (1 = Visit, 2 = Flag, 3 = Use Reward): ", 1, 3);
 
                 switch (action)
                 {
-                    case 1: // Visit
+                    case 1:
                         logic.VisitCell(board, row, col);
                         break;
 
-                    case 2: // Flag toggle
+                    case 2:
                         logic.FlagCell(board, row, col);
                         break;
 
-                    case 3: // Use Reward (peek)
-                        bool? peek = logic.UseRewardPeek(board, row, col);
+                    case 3:
+                        bool? peekResult = logic.UseRewardPeek(board, row, col);
 
-                        if (peek == null)
+                        if (peekResult == null)
                         {
-                            Console.WriteLine("No rewards available (or invalid cell).");
+                            Console.WriteLine("No rewards are available or the selected cell is invalid.");
                         }
-                        else if (peek == true)
+                        else if (peekResult == true)
                         {
-                            Console.WriteLine(" Reward Peek: That cell IS a bomb!");
-                            Console.WriteLine("Reward Peek: That cell IS a bomb!");
+                            Console.WriteLine("Reward Peek: That cell is a bomb.");
                         }
                         else
                         {
-                            Console.WriteLine("Reward Peek: That cell is NOT a bomb!");
+                            Console.WriteLine("Reward Peek: That cell is not a bomb.");
                         }
 
                         Pause();
                         break;
                 }
 
-                // Determine new state after the move
                 state = logic.DetermineGameState(board);
             }
 
-            // Game over screen
             Console.Clear();
-            PrintBoard(board, revealBombs: true);
+            PrintBoard(board, true);
 
             if (state == GameState.Won)
             {
@@ -98,14 +104,17 @@ logic.SetUpBombs(board, difficultyLevel);
 
             Console.WriteLine("\nPress Enter to exit...");
             Console.ReadLine();
-        
+        }
 
-        // Player view: show ? if not visited
-          void PrintBoard(BoardModel board, bool revealBombs)
+        /// <summary>
+        /// Prints the current board view for the player.
+        /// </summary>
+        /// <param name="board">The game board to display.</param>
+        /// <param name="revealBombs">Indicates whether bombs should be revealed.</param>
+        private static void PrintBoard(BoardModel board, bool revealBombs)
         {
             int size = board.Size;
 
-            // Column header
             Console.Write("   ");
             for (int col = 0; col < size; col++)
             {
@@ -113,7 +122,6 @@ logic.SetUpBombs(board, difficultyLevel);
             }
             Console.WriteLine();
 
-            // Top border
             Console.Write("   ");
             for (int col = 0; col < size; col++)
             {
@@ -127,9 +135,8 @@ logic.SetUpBombs(board, difficultyLevel);
 
                 for (int col = 0; col < size; col++)
                 {
-                    var cell = board.Cells[row, col];
+                    CellModel cell = board.Cells[row, col];
 
-                    // Flagged cell (if not visited)
                     if (cell.IsFlagged && !cell.IsVisited)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
@@ -138,7 +145,6 @@ logic.SetUpBombs(board, difficultyLevel);
                         continue;
                     }
 
-                    // Not visited => ?
                     if (!cell.IsVisited)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -147,7 +153,6 @@ logic.SetUpBombs(board, difficultyLevel);
                         continue;
                     }
 
-                    // Visited bomb (only reveal if game over)
                     if (cell.IsBomb && revealBombs)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -156,7 +161,6 @@ logic.SetUpBombs(board, difficultyLevel);
                         continue;
                     }
 
-                    // Visited safe cell => number or .
                     if (cell.NumberOfBombNeighbors == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -174,7 +178,6 @@ logic.SetUpBombs(board, difficultyLevel);
                 Console.WriteLine("|");
             }
 
-            // Bottom border
             Console.Write("   ");
             for (int col = 0; col < size; col++)
             {
@@ -183,8 +186,11 @@ logic.SetUpBombs(board, difficultyLevel);
             Console.WriteLine("-");
         }
 
-        // Debug answer key (optional)
-         void PrintAnswers(BoardModel board)
+        /// <summary>
+        /// Prints the answer key for debugging purposes.
+        /// </summary>
+        /// <param name="board">The game board to display.</param>
+        private static void PrintAnswers(BoardModel board)
         {
             int size = board.Size;
 
@@ -208,7 +214,7 @@ logic.SetUpBombs(board, difficultyLevel);
 
                 for (int col = 0; col < size; col++)
                 {
-                    var cell = board.Cells[row, col];
+                    CellModel cell = board.Cells[row, col];
 
                     if (cell.IsBomb)
                     {
@@ -240,7 +246,14 @@ logic.SetUpBombs(board, difficultyLevel);
             Console.WriteLine("-");
         }
 
-       int ReadInt(string prompt, int min, int max)
+        /// <summary>
+        /// Reads an integer from the user within the allowed range.
+        /// </summary>
+        /// <param name="prompt">The message shown to the user.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>A valid integer entered by the user.</returns>
+        private static int ReadInt(string prompt, int min, int max)
         {
             while (true)
             {
@@ -256,12 +269,13 @@ logic.SetUpBombs(board, difficultyLevel);
             }
         }
 
-        void Pause()
-{
-    Console.WriteLine("Press Enter to continue...");
-    Console.ReadLine();
+        /// <summary>
+        /// Pauses the game until the user presses Enter.
+        /// </summary>
+        private static void Pause()
+        {
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
+        }
+    }
 }
-
-// New Repo Commit
-
- 
