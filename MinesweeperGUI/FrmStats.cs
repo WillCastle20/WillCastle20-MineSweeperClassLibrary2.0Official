@@ -8,9 +8,8 @@
 using MinesweeperClassLibrary.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Windows.Forms;
+using MinesweeperClassLibrary.BusinessLogicLayer;
 
 namespace MinesweeperGUI
 {
@@ -24,6 +23,7 @@ namespace MinesweeperGUI
         /// Stores the list of game statistics displayed in the grid.
         /// </summary>
         private List<GameStat> gameStats = new List<GameStat>();
+        private GameStatLogic gameStatLogic = new GameStatLogic();
 
         /// <summary>
         /// Initializes a new instance of the FrmStats form.
@@ -31,17 +31,34 @@ namespace MinesweeperGUI
         public FrmStats()
         {
             InitializeComponent();
+
+            // Load existing scores when opening stats
+            gameStats = gameStatLogic.LoadGameStats();
+
             RefreshGrid();
         }
 
         /// <summary>
-        /// Initializes a new instance of the FrmStats form with a starting stat entry.
+        /// Initializes a new instance of the FrmStats form, loads existing scores,
+        /// adds the new game result, and updates the saved statistics.
         /// </summary>
-        /// <param name="stat">The game statistic to add to the grid.</param>
+        /// <param name="stat">The game statistic to add to the saved results.</param>
         public FrmStats(GameStat stat)
         {
             InitializeComponent();
+
+            // Load existing scores first so previous games are not overwritten.
+            gameStats = gameStatLogic.LoadGameStats();
+
+            // Give the new score the next available ID.
+            stat.Id = gameStats.Count + 1;
+
+            // Add the new score from the completed game.
             gameStats.Add(stat);
+
+            // Save the full updated list back to the default scores file.
+            gameStatLogic.SaveGameStats(gameStats);
+
             RefreshGrid();
         }
 
@@ -50,16 +67,27 @@ namespace MinesweeperGUI
         /// </summary>
         private void RefreshGrid()
         {
-            DgvStats.DataSource = null;
-            DgvStats.DataSource = gameStats.Select(stat => new
+            List<object> displayStats = new List<object>();
+
+            foreach (GameStat stat in gameStats)
             {
-                stat.Id,
-                stat.Name,
-                stat.Score,
-                GameTime = stat.GameTime.ToString(@"hh\:mm\:ss"),
-                Date = stat.DatePlayed
-            }).ToList();
+                displayStats.Add(new
+                {
+                    stat.Id,
+                    stat.Name,
+                    stat.Score,
+                    GameTime = stat.GameTime.ToString(@"hh\:mm\:ss"),
+                    Date = stat.DatePlayed
+                });
+            }
+
+            DgvStats.DataSource = null;
+            DgvStats.DataSource = displayStats;
         }
+
+
+        // Needs to fix n-layer architecture we need a DAL and needs to write to the text file
+        // MnuSaveClick needs to be in DAL
 
         /// <summary>
         /// Saves the current list of game statistics to a text file.
@@ -76,12 +104,7 @@ namespace MinesweeperGUI
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                using StreamWriter writer = new StreamWriter(saveFileDialog.FileName);
-
-                foreach (GameStat stat in gameStats)
-                {
-                    writer.WriteLine($"{stat.Id},{stat.Name},{stat.Score},{stat.GameTime},{stat.DatePlayed}");
-                }
+                gameStatLogic.SaveGameStats(saveFileDialog.FileName, gameStats);
 
                 MessageBox.Show("Scores saved successfully.");
             }
@@ -102,28 +125,8 @@ namespace MinesweeperGUI
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                gameStats.Clear();
 
-                string[] lines = File.ReadAllLines(openFileDialog.FileName);
-
-                foreach (string line in lines)
-                {
-                    string[] parts = line.Split(',');
-
-                    if (parts.Length >= 5)
-                    {
-                        GameStat stat = new GameStat
-                        {
-                            Id = int.Parse(parts[0]),
-                            Name = parts[1],
-                            Score = int.Parse(parts[2]),
-                            GameTime = TimeSpan.Parse(parts[3]),
-                            DatePlayed = DateTime.Parse(parts[4])
-                        };
-
-                        gameStats.Add(stat);
-                    }
-                }
+                gameStats = gameStatLogic.LoadGameStats(openFileDialog.FileName);
 
                 RefreshGrid();
                 MessageBox.Show("Scores loaded successfully.");
@@ -147,7 +150,7 @@ namespace MinesweeperGUI
         /// <param name="e">The event data.</param>
         private void MnuSortByNameClick(object sender, EventArgs e)
         {
-            gameStats = gameStats.OrderBy(stat => stat.Name).ToList();
+            gameStats = gameStatLogic.SortByName(gameStats);
             RefreshGrid();
         }
 
@@ -158,7 +161,7 @@ namespace MinesweeperGUI
         /// <param name="e">The event data.</param>
         private void MnuSortByScoreClick(object sender, EventArgs e)
         {
-            gameStats = gameStats.OrderByDescending(stat => stat.Score).ToList();
+            gameStats = gameStatLogic.SortByScore(gameStats);
             RefreshGrid();
         }
 
@@ -169,7 +172,7 @@ namespace MinesweeperGUI
         /// <param name="e">The event data.</param>
         private void MnuSortByDateClick(object sender, EventArgs e)
         {
-            gameStats = gameStats.OrderByDescending(stat => stat.DatePlayed).ToList();
+            gameStats = gameStatLogic.SortByDate(gameStats);
             RefreshGrid();
         }
 

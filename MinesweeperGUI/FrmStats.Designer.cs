@@ -56,7 +56,8 @@ namespace MinesweeperGUI
             MenuStats.Items.AddRange(new ToolStripItem[] { MnuFile, MnuSort });
             MenuStats.Location = new Point(0, 0);
             MenuStats.Name = "MenuStats";
-            MenuStats.Size = new Size(1025, 33);
+            MenuStats.Padding = new Padding(8, 3, 0, 3);
+            MenuStats.Size = new Size(2385, 42);
             MenuStats.TabIndex = 0;
             MenuStats.Text = "MenuStats";
             // 
@@ -64,27 +65,27 @@ namespace MinesweeperGUI
             // 
             MnuFile.DropDownItems.AddRange(new ToolStripItem[] { MnuSave, MnuLoad, MnuExit });
             MnuFile.Name = "MnuFile";
-            MnuFile.Size = new Size(54, 29);
+            MnuFile.Size = new Size(71, 36);
             MnuFile.Text = "File";
             // 
             // MnuSave
             // 
             MnuSave.Name = "MnuSave";
-            MnuSave.Size = new Size(153, 34);
+            MnuSave.Size = new Size(198, 44);
             MnuSave.Text = "Save";
             MnuSave.Click += MnuSaveClick;
             // 
             // MnuLoad
             // 
             MnuLoad.Name = "MnuLoad";
-            MnuLoad.Size = new Size(153, 34);
+            MnuLoad.Size = new Size(198, 44);
             MnuLoad.Text = "Load";
             MnuLoad.Click += MnuLoadClick;
             // 
             // MnuExit
             // 
             MnuExit.Name = "MnuExit";
-            MnuExit.Size = new Size(153, 34);
+            MnuExit.Size = new Size(198, 44);
             MnuExit.Text = "Exit";
             MnuExit.Click += MnuExitClick;
             // 
@@ -92,44 +93,46 @@ namespace MinesweeperGUI
             // 
             MnuSort.DropDownItems.AddRange(new ToolStripItem[] { MnuSortByName, MnuSortByScore, MnuSortByDate });
             MnuSort.Name = "MnuSort";
-            MnuSort.Size = new Size(61, 29);
+            MnuSort.Size = new Size(77, 36);
             MnuSort.Text = "Sort";
             // 
             // MnuSortByName
             // 
             MnuSortByName.Name = "MnuSortByName";
-            MnuSortByName.Size = new Size(185, 34);
+            MnuSortByName.Size = new Size(244, 44);
             MnuSortByName.Text = "By Name";
             MnuSortByName.Click += MnuSortByNameClick;
             // 
             // MnuSortByScore
             // 
             MnuSortByScore.Name = "MnuSortByScore";
-            MnuSortByScore.Size = new Size(185, 34);
+            MnuSortByScore.Size = new Size(244, 44);
             MnuSortByScore.Text = "By Score";
             MnuSortByScore.Click += MnuSortByScoreClick;
             // 
             // MnuSortByDate
             // 
             MnuSortByDate.Name = "MnuSortByDate";
-            MnuSortByDate.Size = new Size(185, 34);
+            MnuSortByDate.Size = new Size(244, 44);
             MnuSortByDate.Text = "By Date";
             MnuSortByDate.Click += MnuSortByDateClick;
             // 
             // DgvStats
             // 
             DgvStats.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            DgvStats.Location = new Point(82, 74);
+            DgvStats.Location = new Point(107, 95);
+            DgvStats.Margin = new Padding(4, 4, 4, 4);
             DgvStats.Name = "DgvStats";
             DgvStats.RowHeadersWidth = 62;
-            DgvStats.Size = new Size(736, 225);
+            DgvStats.Size = new Size(957, 288);
             DgvStats.TabIndex = 1;
             // 
             // BtnClose
             // 
-            BtnClose.Location = new Point(90, 356);
+            BtnClose.Location = new Point(117, 456);
+            BtnClose.Margin = new Padding(4, 4, 4, 4);
             BtnClose.Name = "BtnClose";
-            BtnClose.Size = new Size(112, 34);
+            BtnClose.Size = new Size(146, 44);
             BtnClose.TabIndex = 2;
             BtnClose.Text = "Close";
             BtnClose.UseVisualStyleBackColor = true;
@@ -137,13 +140,14 @@ namespace MinesweeperGUI
             // 
             // FrmStats
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1025, 450);
+            ClientSize = new Size(2385, 1170);
             Controls.Add(BtnClose);
             Controls.Add(DgvStats);
             Controls.Add(MenuStats);
             MainMenuStrip = MenuStats;
+            Margin = new Padding(4, 4, 4, 4);
             Name = "FrmStats";
             Text = "FrmStats";
             MenuStats.ResumeLayout(false);

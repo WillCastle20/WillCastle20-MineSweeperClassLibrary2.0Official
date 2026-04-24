@@ -93,13 +93,6 @@ namespace MinesweeperGUI
         public FrmGame(int size, int difficultyLevel)
         {
             InitializeComponent();
-
-            gameTimer = new Timer();
-            gameTimer.Interval = 1000;
-
-            startTime = DateTime.Now;
-            gameTimer.Start();
-
             this.size = size;
             this.difficultyLevel = difficultyLevel;
             gridSize = size;

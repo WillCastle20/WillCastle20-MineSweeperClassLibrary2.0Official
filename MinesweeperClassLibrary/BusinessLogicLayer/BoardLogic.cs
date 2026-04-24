@@ -29,19 +29,32 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
         /// <param name="difficultyLevel">The selected difficulty level.</param>
         public void SetUpBombs(BoardModel board, int difficultyLevel)
         {
+            if (board == null)
+            {
+                throw new ArgumentNullException(nameof(board));
+            }
+
             int numberOfBombs;
 
             if (difficultyLevel == 1)
             {
-                numberOfBombs = board.Size * 2;
+                numberOfBombs = board.Size;
             }
             else if (difficultyLevel == 2)
             {
-                numberOfBombs = board.Size * 3;
+                numberOfBombs = board.Size * 2;
             }
             else
             {
-                numberOfBombs = board.Size * 4;
+                numberOfBombs = board.Size * 3;
+            }
+
+            int totalCells = board.Size * board.Size;
+            int maxBombs = totalCells - 1;
+
+            if (numberOfBombs > maxBombs)
+            {
+                numberOfBombs = maxBombs;
             }
 
             int bombsPlaced = 0;
