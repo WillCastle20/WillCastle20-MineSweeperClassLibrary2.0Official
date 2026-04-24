@@ -1,20 +1,21 @@
 /*Darius Drake William Castellanos
  * CST-250
- * Milestone 5
+ * Milestone 6
  * Updated by Will Castellanos
- * 2/17/26
+ * 4/24/26
  */
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using MinesweeperClassLibrary.BusinessLogicLayer;
 using MinesweeperClassLibrary.Models;
-using System.Collections.Generic;
 using Xunit;
 
 namespace MinesweeperTests
 {
     /// <summary>
-    /// Contains xUnit tests for the BoardLogic class across multiple milestones.
+    /// Contains xUnit tests for the BoardLogic and GameStatLogic classes across multiple milestones.
     /// </summary>
     public class BoardLogicMilestoneTests
     {
@@ -262,11 +263,44 @@ namespace MinesweeperTests
 
             Assert.True(result);
             Assert.Equal(0, board.RewardsRemaining);
-
         }
 
         /// <summary>
-        /// Verifies CalculateScore returns a positive score using difficulty and game time.
+        /// Verifies visiting a reward cell increases rewards remaining and removes the reward from the cell.
+        /// </summary>
+        [Fact]
+        public void VisitRewardCellIncreasesRewardsRemaining()
+        {
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
+
+            board.Cells[0, 0].HasSpecialReward = true;
+
+            logic.VisitCell(board, 0, 0);
+
+            Assert.Equal(1, board.RewardsRemaining);
+            Assert.False(board.Cells[0, 0].HasSpecialReward);
+        }
+
+        /// <summary>
+        /// Verifies reward peek cannot be used when no rewards are available.
+        /// </summary>
+        [Fact]
+        public void UseRewardPeekReturnsNullWhenNoRewardsAvailable()
+        {
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
+
+            board.RewardsRemaining = 0;
+
+            bool? result = logic.UseRewardPeek(board, 0, 0);
+
+            Assert.Null(result);
+            Assert.Equal(0, board.RewardsRemaining);
+        }
+
+        /// <summary>
+        /// Verifies CalculateScore returns a score based on difficulty and game time.
         /// </summary>
         [Fact]
         public void CalculateScoreReturnsExpectedScore()
@@ -288,10 +322,10 @@ namespace MinesweeperTests
             GameStatLogic logic = new GameStatLogic();
 
             List<GameStat> stats = new List<GameStat>
-    {
-        new GameStat(1, "Will", 1000, TimeSpan.FromSeconds(60)),
-        new GameStat(2, "Darius", 2000, TimeSpan.FromSeconds(120))
-    };
+            {
+                new GameStat(1, "Will", 1000, TimeSpan.FromSeconds(60)),
+                new GameStat(2, "Darius", 2000, TimeSpan.FromSeconds(120))
+            };
 
             double averageScore = logic.CalculateAverageScore(stats);
 
@@ -307,10 +341,10 @@ namespace MinesweeperTests
             GameStatLogic logic = new GameStatLogic();
 
             List<GameStat> stats = new List<GameStat>
-    {
-        new GameStat(1, "Will", 1000, TimeSpan.FromSeconds(60)),
-        new GameStat(2, "Darius", 2000, TimeSpan.FromSeconds(120))
-    };
+            {
+                new GameStat(1, "Will", 1000, TimeSpan.FromSeconds(60)),
+                new GameStat(2, "Darius", 2000, TimeSpan.FromSeconds(120))
+            };
 
             TimeSpan averageTime = logic.CalculateAverageGameTime(stats);
 

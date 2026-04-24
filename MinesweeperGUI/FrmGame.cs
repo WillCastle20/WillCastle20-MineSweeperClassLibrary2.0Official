@@ -112,7 +112,7 @@ namespace MinesweeperGUI
             {
                 numberImages[i] = Image.FromFile(Path.Combine(imagePath, $"{i}.png"));
             }
-
+            // Initialize board with bombs, rewards, neighbor counts, then build and display the UI
             logic.SetUpBombs(board, difficultyLevel);
             logic.SetUpRewards(board);
             logic.CountBombsNearby(board);
@@ -163,7 +163,7 @@ namespace MinesweeperGUI
 
         /// <summary>
         /// Handles mouse clicks on board buttons and updates the selected cell.
-        /// Left click visits a cell, right click flags a cell, and middle click uses a reward peek.
+        /// Right click flags a cell, left click visits a cell, and shift-left click or middle click uses a reward peek.
         /// </summary>
         /// <param name="sender">The button that triggered the event.</param>
         /// <param name="e">Mouse event data.</param>
@@ -179,6 +179,10 @@ namespace MinesweeperGUI
             {
                 logic.FlagCell(board, row, col);
             }
+            else if (e.Button == MouseButtons.Left && (ModifierKeys & Keys.Shift) == Keys.Shift)
+            {
+                UseRewardPeek(row, col);
+            }
             else if (e.Button == MouseButtons.Left)
             {
                 bool hadReward = board.Cells[row, col].HasSpecialReward;
@@ -192,26 +196,36 @@ namespace MinesweeperGUI
             }
             else if (e.Button == MouseButtons.Middle)
             {
-                bool? rewardResult = logic.UseRewardPeek(board, row, col);
-
-                if (rewardResult == null)
-                {
-                    MessageBox.Show("You do not have any rewards available.");
-                }
-                else if (rewardResult == true)
-                {
-                    MessageBox.Show("Reward Peek: This cell contains a bomb.");
-                }
-                else
-                {
-                    MessageBox.Show("Reward Peek: This cell is safe.");
-                }
+                UseRewardPeek(row, col);
             }
 
             UpdateBoardUI();
             CheckGameState();
             gameTimer.Stop();
             gameTimer.Start();
+        }
+
+        /// <summary>
+        /// Uses a reward peek on the selected cell and displays whether the cell is safe or contains a bomb.
+        /// </summary>
+        /// <param name="row">The selected row.</param>
+        /// <param name="col">The selected column.</param>
+        private void UseRewardPeek(int row, int col)
+        {
+            bool? rewardResult = logic.UseRewardPeek(board, row, col);
+
+            if (rewardResult == null)
+            {
+                MessageBox.Show("You do not have any rewards available.");
+            }
+            else if (rewardResult == true)
+            {
+                MessageBox.Show("Reward Peek: This cell contains a bomb.");
+            }
+            else
+            {
+                MessageBox.Show("Reward Peek: This cell is safe.");
+            }
         }
 
         /// <summary>
