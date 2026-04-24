@@ -112,8 +112,9 @@ namespace MinesweeperGUI
             {
                 numberImages[i] = Image.FromFile(Path.Combine(imagePath, $"{i}.png"));
             }
-
+            // Initialize board with bombs, rewards, neighbor counts, then build and display the UI
             logic.SetUpBombs(board, difficultyLevel);
+            logic.SetUpRewards(board);
             logic.CountBombsNearby(board);
 
             CreateGrid();
@@ -179,7 +180,28 @@ namespace MinesweeperGUI
             }
             else if (e.Button == MouseButtons.Left)
             {
-                logic.VisitCell(board, row, col);
+              // Hold Shift and left-click to use a reward peek instead of visiting the cell.
+                if ((ModifierKeys & Keys.Shift) == Keys.Shift)
+                {
+                    bool? isBomb = logic.UseRewardPeek(board, row, col);
+
+                    if (isBomb == null)
+                    {
+                        MessageBox.Show("You do not have any rewards to use.");
+                    }
+                    else if (isBomb == true)
+                    {
+                        MessageBox.Show("Reward used: This cell has a bomb!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Reward used: This cell is safe.");
+                    }
+                }
+                else
+                {
+                    logic.VisitCell(board, row, col);
+                }
             }
 
             UpdateBoardUI();
