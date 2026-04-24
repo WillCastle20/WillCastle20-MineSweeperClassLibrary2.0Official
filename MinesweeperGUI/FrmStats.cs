@@ -83,6 +83,8 @@ namespace MinesweeperGUI
 
             DgvStats.DataSource = null;
             DgvStats.DataSource = displayStats;
+
+            UpdateAnalysisLabels();
         }
 
 
@@ -184,6 +186,18 @@ namespace MinesweeperGUI
         private void BtnCloseClick(object sender, EventArgs e)
         {
             Close();
+        }
+
+        /// <summary>
+        /// Updates the analysis labels beneath the grid with average score and average game time.
+        /// </summary>
+        private void UpdateAnalysisLabels()
+        {
+            double averageScore = gameStatLogic.CalculateAverageScore(gameStats);
+            TimeSpan averageTime = gameStatLogic.CalculateAverageGameTime(gameStats);
+
+            LblAverageScore.Text = $"Average Points: {averageScore:F2}";
+            LblAverageTime.Text = $"Average Time Per Game: {averageTime:hh\\:mm\\:ss}";
         }
     }
 }

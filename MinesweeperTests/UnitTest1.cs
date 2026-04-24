@@ -8,6 +8,7 @@
 using System.Linq;
 using MinesweeperClassLibrary.BusinessLogicLayer;
 using MinesweeperClassLibrary.Models;
+using System.Collections.Generic;
 using Xunit;
 
 namespace MinesweeperTests
@@ -263,6 +264,59 @@ namespace MinesweeperTests
             Assert.Equal(0, board.RewardsRemaining);
 
         }
+
+        /// <summary>
+        /// Verifies CalculateScore returns a positive score using difficulty and game time.
+        /// </summary>
+        [Fact]
+        public void CalculateScoreReturnsExpectedScore()
+        {
+            BoardLogic logic = new BoardLogic();
+            TimeSpan gameTime = TimeSpan.FromSeconds(30);
+
+            int score = logic.CalculateScore(2, gameTime);
+
+            Assert.Equal(1170, score);
+        }
+
+        /// <summary>
+        /// Verifies CalculateAverageScore returns the correct average score.
+        /// </summary>
+        [Fact]
+        public void CalculateAverageScoreReturnsCorrectAverage()
+        {
+            GameStatLogic logic = new GameStatLogic();
+
+            List<GameStat> stats = new List<GameStat>
+    {
+        new GameStat(1, "Will", 1000, TimeSpan.FromSeconds(60)),
+        new GameStat(2, "Darius", 2000, TimeSpan.FromSeconds(120))
+    };
+
+            double averageScore = logic.CalculateAverageScore(stats);
+
+            Assert.Equal(1500, averageScore);
+        }
+
+        /// <summary>
+        /// Verifies CalculateAverageGameTime returns the correct average game time.
+        /// </summary>
+        [Fact]
+        public void CalculateAverageGameTimeReturnsCorrectAverage()
+        {
+            GameStatLogic logic = new GameStatLogic();
+
+            List<GameStat> stats = new List<GameStat>
+    {
+        new GameStat(1, "Will", 1000, TimeSpan.FromSeconds(60)),
+        new GameStat(2, "Darius", 2000, TimeSpan.FromSeconds(120))
+    };
+
+            TimeSpan averageTime = logic.CalculateAverageGameTime(stats);
+
+            Assert.Equal(TimeSpan.FromSeconds(90), averageTime);
+        }
+
         /// <summary>
         /// Marks all non-bomb cells on the board as visited.
         /// </summary>

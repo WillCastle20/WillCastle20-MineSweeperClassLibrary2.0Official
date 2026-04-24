@@ -114,6 +114,7 @@ namespace MinesweeperGUI
             }
 
             logic.SetUpBombs(board, difficultyLevel);
+            logic.SetUpRewards(board);
             logic.CountBombsNearby(board);
 
             CreateGrid();
@@ -162,6 +163,7 @@ namespace MinesweeperGUI
 
         /// <summary>
         /// Handles mouse clicks on board buttons and updates the selected cell.
+        /// Left click visits a cell, right click flags a cell, and middle click uses a reward peek.
         /// </summary>
         /// <param name="sender">The button that triggered the event.</param>
         /// <param name="e">Mouse event data.</param>
@@ -179,7 +181,31 @@ namespace MinesweeperGUI
             }
             else if (e.Button == MouseButtons.Left)
             {
+                bool hadReward = board.Cells[row, col].HasSpecialReward;
+
                 logic.VisitCell(board, row, col);
+
+                if (hadReward)
+                {
+                    MessageBox.Show("You found a special reward! You can now use one reward peek.");
+                }
+            }
+            else if (e.Button == MouseButtons.Middle)
+            {
+                bool? rewardResult = logic.UseRewardPeek(board, row, col);
+
+                if (rewardResult == null)
+                {
+                    MessageBox.Show("You do not have any rewards available.");
+                }
+                else if (rewardResult == true)
+                {
+                    MessageBox.Show("Reward Peek: This cell contains a bomb.");
+                }
+                else
+                {
+                    MessageBox.Show("Reward Peek: This cell is safe.");
+                }
             }
 
             UpdateBoardUI();
@@ -320,17 +346,13 @@ namespace MinesweeperGUI
         }
 
         /// <summary>
-        /// Calculates the final score based on difficulty and elapsed time.
+        /// Calculates the final score by calling the business logic layer.
         /// </summary>
         /// <returns>The calculated player score.</returns>
         private int CalculateScore()
         {
-            int baseScore = 1000;
-            int difficultyBonus = difficultyLevel * 100;
             TimeSpan gameTime = DateTime.Now - startTime;
-            int timePenalty = (int)gameTime.TotalSeconds;
-
-            return baseScore + difficultyBonus - timePenalty;
+            return logic.CalculateScore(difficultyLevel, gameTime);
         }
     }
 }
