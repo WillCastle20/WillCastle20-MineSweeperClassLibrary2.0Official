@@ -263,6 +263,42 @@ namespace MinesweeperTests
             Assert.Equal(0, board.RewardsRemaining);
 
         }
+
+        /// <summary>
+        /// Verifies visiting a reward cell increases rewards remaining and removes the reward from the cell.
+        /// </summary>
+        [Fact]
+        public void VisitRewardCellIncreasesRewardsRemaining()
+        {
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
+
+            board.Cells[0, 0].HasSpecialReward = true;
+
+            logic.VisitCell(board, 0, 0);
+
+            Assert.Equal(1, board.RewardsRemaining);
+            Assert.False(board.Cells[0, 0].HasSpecialReward);
+        }
+
+        /// <summary>
+        /// Verifies reward peek cannot be used when no rewards are available.
+        /// </summary>
+        [Fact]
+        public void UseRewardPeekReturnsNullWhenNoRewardsAvailable()
+        {
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
+
+            board.RewardsRemaining = 0;
+
+            bool? result = logic.UseRewardPeek(board, 0, 0);
+
+            Assert.Null(result);
+            Assert.Equal(0, board.RewardsRemaining);
+        }
+
+
         /// <summary>
         /// Marks all non-bomb cells on the board as visited.
         /// </summary>
