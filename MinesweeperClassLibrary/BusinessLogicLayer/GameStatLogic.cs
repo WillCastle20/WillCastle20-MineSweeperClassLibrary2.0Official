@@ -9,6 +9,8 @@
 using MinesweeperClassLibrary.DataAccessLayer;
 using MinesweeperClassLibrary.Models;
 using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace MinesweeperClassLibrary.BusinessLogicLayer
 {
@@ -101,6 +103,38 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
         private int CompareByDate(GameStat firstStat, GameStat secondStat)
         {
             return secondStat.DatePlayed.CompareTo(firstStat.DatePlayed);
+        }
+
+        /// <summary>
+        /// Calculates the average score from a list of game statistics.
+        /// </summary>
+        /// <param name="stats">The list of game statistics.</param>
+        /// <returns>The average score, or 0 if there are no stats.</returns>
+        public double CalculateAverageScore(List<GameStat> stats)
+        {
+            if (stats == null || stats.Count == 0)
+            {
+                return 0;
+            }
+
+            return stats.Average(stat => stat.Score);
+        }
+
+        /// <summary>
+        /// Calculates the average game time from a list of game statistics.
+        /// </summary>
+        /// <param name="stats">The list of game statistics.</param>
+        /// <returns>The average game time, or TimeSpan.Zero if there are no stats.</returns>
+        public TimeSpan CalculateAverageGameTime(List<GameStat> stats)
+        {
+            if (stats == null || stats.Count == 0)
+            {
+                return TimeSpan.Zero;
+            }
+
+            double averageTicks = stats.Average(stat => stat.GameTime.Ticks);
+
+            return TimeSpan.FromTicks((long)averageTicks);
         }
     }
 }

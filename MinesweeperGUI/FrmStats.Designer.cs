@@ -46,6 +46,8 @@ namespace MinesweeperGUI
             MnuSortByDate = new ToolStripMenuItem();
             DgvStats = new DataGridView();
             BtnClose = new Button();
+            LblAverageTime = new Label();
+            LblAverageScore = new Label();
             MenuStats.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DgvStats).BeginInit();
             SuspendLayout();
@@ -56,8 +58,7 @@ namespace MinesweeperGUI
             MenuStats.Items.AddRange(new ToolStripItem[] { MnuFile, MnuSort });
             MenuStats.Location = new Point(0, 0);
             MenuStats.Name = "MenuStats";
-            MenuStats.Padding = new Padding(8, 3, 0, 3);
-            MenuStats.Size = new Size(2385, 42);
+            MenuStats.Size = new Size(1480, 33);
             MenuStats.TabIndex = 0;
             MenuStats.Text = "MenuStats";
             // 
@@ -65,27 +66,27 @@ namespace MinesweeperGUI
             // 
             MnuFile.DropDownItems.AddRange(new ToolStripItem[] { MnuSave, MnuLoad, MnuExit });
             MnuFile.Name = "MnuFile";
-            MnuFile.Size = new Size(71, 36);
+            MnuFile.Size = new Size(54, 29);
             MnuFile.Text = "File";
             // 
             // MnuSave
             // 
             MnuSave.Name = "MnuSave";
-            MnuSave.Size = new Size(198, 44);
+            MnuSave.Size = new Size(153, 34);
             MnuSave.Text = "Save";
             MnuSave.Click += MnuSaveClick;
             // 
             // MnuLoad
             // 
             MnuLoad.Name = "MnuLoad";
-            MnuLoad.Size = new Size(198, 44);
+            MnuLoad.Size = new Size(153, 34);
             MnuLoad.Text = "Load";
             MnuLoad.Click += MnuLoadClick;
             // 
             // MnuExit
             // 
             MnuExit.Name = "MnuExit";
-            MnuExit.Size = new Size(198, 44);
+            MnuExit.Size = new Size(153, 34);
             MnuExit.Text = "Exit";
             MnuExit.Click += MnuExitClick;
             // 
@@ -93,61 +94,78 @@ namespace MinesweeperGUI
             // 
             MnuSort.DropDownItems.AddRange(new ToolStripItem[] { MnuSortByName, MnuSortByScore, MnuSortByDate });
             MnuSort.Name = "MnuSort";
-            MnuSort.Size = new Size(77, 36);
+            MnuSort.Size = new Size(61, 29);
             MnuSort.Text = "Sort";
             // 
             // MnuSortByName
             // 
             MnuSortByName.Name = "MnuSortByName";
-            MnuSortByName.Size = new Size(244, 44);
+            MnuSortByName.Size = new Size(185, 34);
             MnuSortByName.Text = "By Name";
             MnuSortByName.Click += MnuSortByNameClick;
             // 
             // MnuSortByScore
             // 
             MnuSortByScore.Name = "MnuSortByScore";
-            MnuSortByScore.Size = new Size(244, 44);
+            MnuSortByScore.Size = new Size(185, 34);
             MnuSortByScore.Text = "By Score";
             MnuSortByScore.Click += MnuSortByScoreClick;
             // 
             // MnuSortByDate
             // 
             MnuSortByDate.Name = "MnuSortByDate";
-            MnuSortByDate.Size = new Size(244, 44);
+            MnuSortByDate.Size = new Size(185, 34);
             MnuSortByDate.Text = "By Date";
             MnuSortByDate.Click += MnuSortByDateClick;
             // 
             // DgvStats
             // 
             DgvStats.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            DgvStats.Location = new Point(107, 95);
-            DgvStats.Margin = new Padding(4, 4, 4, 4);
+            DgvStats.Location = new Point(82, 74);
             DgvStats.Name = "DgvStats";
             DgvStats.RowHeadersWidth = 62;
-            DgvStats.Size = new Size(957, 288);
+            DgvStats.Size = new Size(736, 225);
             DgvStats.TabIndex = 1;
             // 
             // BtnClose
             // 
-            BtnClose.Location = new Point(117, 456);
-            BtnClose.Margin = new Padding(4, 4, 4, 4);
+            BtnClose.Location = new Point(91, 429);
             BtnClose.Name = "BtnClose";
-            BtnClose.Size = new Size(146, 44);
+            BtnClose.Size = new Size(112, 34);
             BtnClose.TabIndex = 2;
             BtnClose.Text = "Close";
             BtnClose.UseVisualStyleBackColor = true;
             BtnClose.Click += BtnCloseClick;
             // 
+            // LblAverageTime
+            // 
+            LblAverageTime.AutoSize = true;
+            LblAverageTime.Location = new Point(110, 349);
+            LblAverageTime.Name = "LblAverageTime";
+            LblAverageTime.Size = new Size(277, 25);
+            LblAverageTime.TabIndex = 3;
+            LblAverageTime.Text = "Average Time Per Game: 00:00:00";
+            // 
+            // LblAverageScore
+            // 
+            LblAverageScore.AutoSize = true;
+            LblAverageScore.Location = new Point(468, 349);
+            LblAverageScore.Name = "LblAverageScore";
+            LblAverageScore.Size = new Size(149, 25);
+            LblAverageScore.TabIndex = 4;
+            LblAverageScore.Text = "Average Points: 0";
+            // 
             // FrmStats
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(2385, 1170);
+            ClientSize = new Size(1480, 820);
+            Controls.Add(LblAverageScore);
+            Controls.Add(LblAverageTime);
             Controls.Add(BtnClose);
             Controls.Add(DgvStats);
             Controls.Add(MenuStats);
             MainMenuStrip = MenuStats;
-            Margin = new Padding(4, 4, 4, 4);
             Name = "FrmStats";
             Text = "FrmStats";
             MenuStats.ResumeLayout(false);
@@ -170,5 +188,7 @@ namespace MinesweeperGUI
         private ToolStripMenuItem MnuSortByName;
         private ToolStripMenuItem MnuSortByScore;
         private ToolStripMenuItem MnuSortByDate;
+        private Label LblAverageTime;
+        private Label LblAverageScore;
     }
 }
