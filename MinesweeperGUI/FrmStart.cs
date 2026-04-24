@@ -31,7 +31,14 @@ namespace MinesweeperGUI
         /// <param name="e">The event data.</param>
         private void BtnStartGameClick(object sender, EventArgs e)
         {
+            // Fixes board size bug
             int size = int.TryParse(TxtSize.Text, out int result) ? result : 5;
+
+            if (size < 2)
+            {
+                MessageBox.Show("Board size must be at least 2.");
+                return;
+            }
             string difficulty = CmbDifficulty.SelectedItem?.ToString() ?? "Easy";
 
             int difficultyLevel = 1;

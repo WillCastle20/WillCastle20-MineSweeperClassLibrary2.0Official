@@ -59,7 +59,8 @@ namespace MinesweeperGUI
 
             GameStat stat = new GameStat
             {
-                Id = 1,
+
+                Id = 0,
                 Name = playerName,
                 Score = score,
                 GameTime = gameTime,
