@@ -180,6 +180,90 @@ namespace MinesweeperTests
         }
 
         /// <summary>
+        /// Verifies SetUpBombs places bombs without filling the entire board.
+        /// </summary>
+        [Fact]
+        public void SetUpBombsDoesNotMakeEveryCellABomb()
+        {
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
+
+            logic.SetUpBombs(board, 1);
+
+            int bombCount = 0;
+
+            foreach (CellModel cell in board.Cells)
+            {
+                if (cell.IsBomb)
+                {
+                    bombCount++;
+                }
+            }
+
+            Assert.True(bombCount < 4);
+            Assert.True(bombCount > 0);
+        }
+
+        /// <summary>
+        /// Verifies SetUpRewards places rewards only on non-bomb cells.
+        /// </summary>
+        [Fact]
+        public void SetUpRewardsPlacesRewardsOnNonBombCells()
+        {
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(3);
+
+            board.Cells[0, 0].IsBomb = true;
+
+            logic.SetUpRewards(board, 2);
+
+            foreach (CellModel cell in board.Cells)
+            {
+                if (cell.HasSpecialReward)
+                {
+                    Assert.False(cell.IsBomb);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Verifies CountBombsNearby correctly counts neighboring bombs.
+        /// </summary>
+        [Fact]
+        public void CountBombsNearbyCountsNeighboringBombs()
+        {
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(3);
+
+            board.Cells[0, 0].IsBomb = true;
+
+            logic.CountBombsNearby(board);
+
+            Assert.Equal(1, board.Cells[0, 1].NumberOfBombNeighbors);
+            Assert.Equal(1, board.Cells[1, 0].NumberOfBombNeighbors);
+            Assert.Equal(1, board.Cells[1, 1].NumberOfBombNeighbors);
+            Assert.Equal(9, board.Cells[0, 0].NumberOfBombNeighbors);
+        }
+
+        /// <summary>
+        /// Verifies UseRewardPeek uses one reward and returns whether the selected cell is a bomb.
+        /// </summary>
+        [Fact]
+        public void UseRewardPeekReturnsBombStatusAndUsesReward()
+        {
+            BoardLogic logic = new BoardLogic();
+            BoardModel board = new BoardModel(2);
+
+            board.RewardsRemaining = 1;
+            board.Cells[0, 0].IsBomb = true;
+
+            bool? result = logic.UseRewardPeek(board, 0, 0);
+
+            Assert.True(result);
+            Assert.Equal(0, board.RewardsRemaining);
+
+        }
+        /// <summary>
         /// Marks all non-bomb cells on the board as visited.
         /// </summary>
         /// <param name="board">The board whose safe cells will be visited.</param>
