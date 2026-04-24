@@ -163,6 +163,7 @@ namespace MinesweeperGUI
 
         /// <summary>
         /// Handles mouse clicks on board buttons and updates the selected cell.
+        /// Right click flags a cell, left click visits a cell, and shift-left click or middle click uses a reward peek.
         /// </summary>
         /// <param name="sender">The button that triggered the event.</param>
         /// <param name="e">Mouse event data.</param>
@@ -178,36 +179,53 @@ namespace MinesweeperGUI
             {
                 logic.FlagCell(board, row, col);
             }
+            else if (e.Button == MouseButtons.Left && (ModifierKeys & Keys.Shift) == Keys.Shift)
+            {
+                UseRewardPeek(row, col);
+            }
             else if (e.Button == MouseButtons.Left)
             {
-              // Hold Shift and left-click to use a reward peek instead of visiting the cell.
-                if ((ModifierKeys & Keys.Shift) == Keys.Shift)
-                {
-                    bool? isBomb = logic.UseRewardPeek(board, row, col);
+                bool hadReward = board.Cells[row, col].HasSpecialReward;
 
-                    if (isBomb == null)
-                    {
-                        MessageBox.Show("You do not have any rewards to use.");
-                    }
-                    else if (isBomb == true)
-                    {
-                        MessageBox.Show("Reward used: This cell has a bomb!");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Reward used: This cell is safe.");
-                    }
-                }
-                else
+                logic.VisitCell(board, row, col);
+
+                if (hadReward)
                 {
-                    logic.VisitCell(board, row, col);
+                    MessageBox.Show("You found a special reward! You can now use one reward peek.");
                 }
+            }
+            else if (e.Button == MouseButtons.Middle)
+            {
+                UseRewardPeek(row, col);
             }
 
             UpdateBoardUI();
             CheckGameState();
             gameTimer.Stop();
             gameTimer.Start();
+        }
+
+        /// <summary>
+        /// Uses a reward peek on the selected cell and displays whether the cell is safe or contains a bomb.
+        /// </summary>
+        /// <param name="row">The selected row.</param>
+        /// <param name="col">The selected column.</param>
+        private void UseRewardPeek(int row, int col)
+        {
+            bool? rewardResult = logic.UseRewardPeek(board, row, col);
+
+            if (rewardResult == null)
+            {
+                MessageBox.Show("You do not have any rewards available.");
+            }
+            else if (rewardResult == true)
+            {
+                MessageBox.Show("Reward Peek: This cell contains a bomb.");
+            }
+            else
+            {
+                MessageBox.Show("Reward Peek: This cell is safe.");
+            }
         }
 
         /// <summary>
@@ -342,17 +360,13 @@ namespace MinesweeperGUI
         }
 
         /// <summary>
-        /// Calculates the final score based on difficulty and elapsed time.
+        /// Calculates the final score by calling the business logic layer.
         /// </summary>
         /// <returns>The calculated player score.</returns>
         private int CalculateScore()
         {
-            int baseScore = 1000;
-            int difficultyBonus = difficultyLevel * 100;
             TimeSpan gameTime = DateTime.Now - startTime;
-            int timePenalty = (int)gameTime.TotalSeconds;
-
-            return baseScore + difficultyBonus - timePenalty;
+            return logic.CalculateScore(difficultyLevel, gameTime);
         }
     }
 }

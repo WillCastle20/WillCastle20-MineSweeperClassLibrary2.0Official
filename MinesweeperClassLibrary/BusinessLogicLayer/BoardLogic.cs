@@ -344,6 +344,28 @@ namespace MinesweeperClassLibrary.BusinessLogicLayer
         }
 
         /// <summary>
+        /// Calculates the player's final score based on difficulty and elapsed game time.
+        /// </summary>
+        /// <param name="difficultyLevel">The selected difficulty level.</param>
+        /// <param name="gameTime">The amount of time the player spent in the game.</param>
+        /// <returns>The calculated final score.</returns>
+        public int CalculateScore(int difficultyLevel, TimeSpan gameTime)
+        {
+            int baseScore = 1000;
+            int difficultyBonus = difficultyLevel * 100;
+            int timePenalty = (int)gameTime.TotalSeconds;
+
+            int finalScore = baseScore + difficultyBonus - timePenalty;
+
+            if (finalScore < 0)
+            {
+                finalScore = 0;
+            }
+
+            return finalScore;
+        }
+
+        /// <summary>
         /// Determines whether the specified row and column are within the board boundaries.
         /// </summary>
         /// <param name="board">The game board being checked.</param>
